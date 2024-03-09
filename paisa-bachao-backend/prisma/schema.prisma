@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Passbook has many transactions
+model Transaction {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  from          Account @relation("FromAccount", references: [id], fields: [fromAccountID], onDelete: Cascade, onUpdate: Cascade)
+  fromAccountID String
+
+  to          Account @relation("ToAccount", references: [id], fields: [toAccountID], onDelete: Cascade, onUpdate: Cascade)
+  toAccountID String
+
+  amount Decimal
+
+  temporalStamp DateTime @default(now())
+  place         String?
+  description   String?
+
+  tags Tag[]
+
+  transactionFragments Transaction[] @relation("fragments")
+
+  motherTransaction   Transaction? @relation("fragments", fields: [motherTransactionId], references: [id])
+  motherTransactionId String?
+}
+
+// Tag are the tags for transactions
+// Transactions can have many tags
+model Tag {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name  String
+  color String
+  icon  String
+
+  transactions Transaction[]
+}
+
+// Account are user accounts
+model Account {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name    String  @unique
+  balance Decimal @default(0)
+
+  accountGroup   AccountGroup? @relation(references: [id], fields: [accountGroupID], onUpdate: SetNull, onDelete: SetNull)
+  accountGroupID String?
+
+  fromTransactions Transaction[] @relation("FromAccount")
+  toTransactions   Transaction[] @relation("ToAccount")
+
+  @@index(name)
+}
+
+// Account Groups are collection of accounts
+// that are related
+model AccountGroup {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String @unique
+
+  accounts Account[]
+
+  @@index(name)
+}

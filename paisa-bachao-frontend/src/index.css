@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --primary: #cbf7ed;
+    --secondary: #ffa69e;
+    --accent: #e4fde1;
+    --tertiary: #ff686b;
+    --dark: #394053;
+    --light: #e8f0f2;
+    --charcol: #394053;
+    --white: #fff;
+  }
+}
+
+html,
+body,
+#root {
+  background: linear-gradient(180deg, #333333 0%, #000000 100%);
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  height: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 1024px;
+  margin-inline: auto;
+  padding: 2rem 0;
+}

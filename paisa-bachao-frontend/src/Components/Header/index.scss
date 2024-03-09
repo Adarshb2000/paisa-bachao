@@ -1,0 +1,77 @@
+@import '../../partials/responsive-property';
+
+.header {
+  display: flex;
+  padding: 0.25rem 5%;
+  align-items: center;
+
+  > * {
+    flex: 1;
+  }
+
+  > button {
+    position: absolute;
+    right: 1rem;
+    font-size: 1.5rem;
+    color: var(--primary);
+    z-index: 999999;
+    @include responsive-property(display, block, none);
+  }
+
+  > nav > ul {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1.5rem;
+    color: var(--primary);
+    > li > a {
+      position: relative;
+      &::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        width: 120%;
+        left: 0;
+        translate: -10% 0;
+        height: 0.75rem;
+        background-color: transparent;
+        border-bottom: 0.125rem solid var(--secondary);
+        display: none;
+      }
+
+      &:hover::after {
+        display: block;
+        opacity: 0.25;
+      }
+
+      &.active::after {
+        display: block;
+        opacity: 1;
+      }
+
+      &.transitioning::after,
+      &.pending::after {
+        transition: opacity 1s;
+      }
+    }
+  }
+
+  > nav {
+    @media screen and (width <= 30rem) {
+      position: absolute;
+      z-index: 9999;
+      inset: 0;
+      > ul {
+        position: absolute;
+        inset: 0 0 0 100%;
+        justify-content: flex-start;
+        flex-direction: column;
+        backdrop-filter: blur(0.5rem);
+        padding: 4rem 1.5rem;
+        transition: left 0.4s ease-out;
+      }
+      &.active > ul {
+        left: 40%;
+      }
+    }
+  }
+}

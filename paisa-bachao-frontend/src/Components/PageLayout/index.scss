@@ -1,0 +1,24 @@
+@import '../../partials/responsive-property';
+
+.page-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100svh;
+  justify-content: flex-start;
+  align-items: stretch;
+  max-width: 100vw;
+  overflow-x: hidden;
+
+  > header {
+    flex: 0 0 auto;
+  }
+  > main {
+    flex: 1 0 auto;
+    max-width: 1024px;
+    @include responsive-property(margin-inline, 0, auto);
+    @include responsive-property(width, 100%, max(80%, 30rem));
+  }
+  > footer {
+    flex: 0 0 auto;
+  }
+}

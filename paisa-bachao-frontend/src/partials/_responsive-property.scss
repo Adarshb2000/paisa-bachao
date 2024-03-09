@@ -1,0 +1,17 @@
+@mixin responsive-property-breakpoints($property, $breakpoint-map) {
+  @each $breakpoint, $value in $breakpoint-map {
+    @media screen and (min-width: $breakpoint) {
+      #{$property}: $value;
+    }
+  }
+}
+
+@mixin responsive-property($property, $sm, $md: $sm, $lg: $md, $xl: $lg) {
+  $breakpoint-map: (
+    0: $sm,
+    30rem: $md,
+    64rem: $lg,
+    120rem: $xl,
+  );
+  @include responsive-property-breakpoints($property, $breakpoint-map);
+}

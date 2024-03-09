@@ -1,0 +1,50 @@
+@import '../../../src/index.css';
+
+.addButton {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+
+  > div {
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    .content {
+      width: 20rem;
+      max-width: 100%;
+      height: max(fit-content, 10rem);
+      background: var(--dark);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      overflow-x: hidden;
+      box-shadow: 0 0 2rem rgba(0, 0, 0, 0.5);
+    }
+    transition: all 0.5s ease;
+
+    > button {
+      background: var(--accent);
+      transition: all 0.5s ease;
+    }
+  }
+
+  &.active {
+    width: 100%;
+    height: 100%;
+    > div {
+      right: 50%;
+      bottom: 50%;
+      transform: translate(50%, 50%);
+
+      > button {
+        --offset: -1.75rem;
+        position: absolute;
+        right: var(--offset);
+        top: var(--offset);
+        rotate: 45deg;
+        background: #f33;
+        width: 3.25rem;
+        height: 3.25rem;
+      }
+    }
+  }
+}

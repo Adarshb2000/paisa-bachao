@@ -1,0 +1,28 @@
+.add-account {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+
+  > form {
+    --form-primary: var(--secondary);
+    --form-secondary: var(--dark);
+    --form-accent: var(--secondary);
+    --form-dark: var(--secondary);
+    background: var(--dark);
+    border-radius: 0.5rem;
+    max-width: 100%;
+    width: 24rem;
+    > * + * {
+      margin-top: 1rem;
+    }
+    .form-control input {
+      width: 100%;
+    }
+
+    > h1 {
+      margin-bottom: 1;
+    }
+  }
+}

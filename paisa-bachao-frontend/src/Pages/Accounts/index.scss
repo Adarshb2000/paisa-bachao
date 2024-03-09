@@ -1,0 +1,43 @@
+@import '../../styles/global.scss';
+
+.accounts {
+  .add-button {
+    p {
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 3rem;
+      > span {
+        position: absolute;
+        z-index: 1;
+        background: var(--dark);
+        display: inline-block;
+        padding: 0 0.5rem;
+      }
+      &::before {
+        content: '';
+        display: inline-block;
+        position: absolute;
+        width: 80%;
+        height: 0.25rem;
+        background: var(--accent);
+        margin: 0.5rem 1rem;
+      }
+    }
+    button {
+      background: var(--secondary);
+      color: var(--dark);
+      width: 100%;
+      padding: 0.25rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.5s ease;
+      &:hover {
+        background: var(--accent);
+      }
+    }
+  }
+}
