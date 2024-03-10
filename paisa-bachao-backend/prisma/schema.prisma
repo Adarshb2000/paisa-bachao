@@ -16,11 +16,13 @@ model Transaction {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  from          Account @relation("FromAccount", references: [id], fields: [fromAccountID], onDelete: Cascade, onUpdate: Cascade)
-  fromAccountID String
+  from          Account? @relation("FromAccount", references: [id], fields: [fromAccountID], onDelete: Cascade, onUpdate: Cascade)
+  fromAccountID String?
+  fromName      String?
 
-  to          Account @relation("ToAccount", references: [id], fields: [toAccountID], onDelete: Cascade, onUpdate: Cascade)
-  toAccountID String
+  to          Account? @relation("ToAccount", references: [id], fields: [toAccountID], onDelete: Cascade, onUpdate: Cascade)
+  toAccountID String?
+  toName      String?
 
   amount Decimal
 

@@ -225,6 +225,7 @@ export const updateAccountBalance = async ({
 export const updateMultipleAccountsBalances = async (
   balanceUpdates: BalanceUpdate[]
 ) => {
+  if (!balanceUpdates.length) return
   const { query, params } =
     generateQueryAndParamsForBalanceUpdate(balanceUpdates)
   await prisma.$executeRawUnsafe(query, ...params)

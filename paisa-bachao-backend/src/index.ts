@@ -11,8 +11,6 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 app.get('/', (req, res) => {
-  const { x } = req.query
-  console.log(typeof x, x)
   res.send({ message: 'Hello World' })
 })
 
