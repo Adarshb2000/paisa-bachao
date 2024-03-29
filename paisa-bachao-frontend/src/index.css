@@ -4,14 +4,14 @@
 
 @layer base {
   :root {
-    --primary: #cbf7ed;
-    --secondary: #ffa69e;
-    --accent: #e4fde1;
-    --tertiary: #ff686b;
-    --dark: #394053;
-    --light: #e8f0f2;
-    --charcol: #394053;
-    --white: #fff;
+    color-scheme: dark light;
+
+    --primary: #2ecc71;
+    --secondary: #3498db;
+    --tertiary: #d5dbdb;
+    --accent: #f39c12;
+    --dark: #333333;
+    --light: #f9f9f9;
   }
 }
 

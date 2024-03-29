@@ -2,26 +2,33 @@
 
 .addButton {
   position: fixed;
-  bottom: 0;
-  right: 0;
+  bottom: 2rem;
+  right: 2rem;
 
   > div {
     position: absolute;
-    bottom: 2rem;
-    right: 2rem;
+    bottom: 0;
+    right: 0;
     .content {
+      scale: 0;
       width: 20rem;
       max-width: 100%;
-      height: max(fit-content, 10rem);
+      height: max(max-content, 10rem);
       background: var(--dark);
       padding: 1rem;
       border-radius: 0.5rem;
       overflow-x: hidden;
       box-shadow: 0 0 2rem rgba(0, 0, 0, 0.5);
     }
-    transition: all 0.5s ease;
+    transition:
+      bottom 0.5s ease,
+      right 0.5s ease,
+      translate 0s linear;
 
     > button {
+      position: absolute;
+      bottom: 0;
+      right: 0;
       background: var(--accent);
       transition: all 0.5s ease;
     }
@@ -34,10 +41,12 @@
       right: 50%;
       bottom: 50%;
       transform: translate(50%, 50%);
+      .content {
+        scale: 1;
+      }
 
       > button {
         --offset: -1.75rem;
-        position: absolute;
         right: var(--offset);
         top: var(--offset);
         rotate: 45deg;

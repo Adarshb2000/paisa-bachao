@@ -5,7 +5,7 @@ import './index.scss'
 const PageLayout = () => (
   <div className='page-layout'>
     <Header />
-    <main className='relative bg-charcol p-8'>
+    <main className='relative px-8 py-4'>
       <Outlet />
     </main>
   </div>

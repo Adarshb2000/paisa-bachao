@@ -1,0 +1,27 @@
+.datalist {
+  &:focus-within {
+    .datalist {
+      display: block;
+    }
+  }
+  > ul {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: var(--dark);
+    border: 1px solid var(--secondary);
+    border-top-color: transparent;
+    border-radius: 0.25rem;
+    z-index: 1;
+    > li {
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      transition: background 0.5s;
+      &.highlighted {
+        background: var(--secondary);
+      }
+    }
+  }
+}

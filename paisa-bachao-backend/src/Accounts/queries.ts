@@ -51,21 +51,21 @@ export const getAccountByID = async ({ id }: { id: string }) => {
 }
 
 export const getAccounts = async ({
-  search = '',
+  name = '',
   page = 1,
   pageSize,
   singles = true,
 }: {
-  search?: string
+  name?: string
   page?: number
   pageSize?: number
   singles?: boolean
 }) => {
   const accounts = await prisma.account.findMany({
     where: {
-      name: search
+      name: name
         ? {
-            contains: search,
+            contains: name,
             mode: 'insensitive',
           }
         : undefined,
@@ -85,23 +85,23 @@ export const getAccounts = async ({
 }
 
 export const getAccountsWithGroups = async ({
-  search = '',
+  name = '',
   accounts = false,
   page = 1,
   pageSize = 10,
 }: {
-  search?: string
+  name?: string
   accounts?: boolean
   page?: number
   pageSize?: number
 }) => {
   const accountGroups = await prisma.accountGroup.findMany({
     where: {
-      OR: search
+      OR: name
         ? [
             {
               name: {
-                contains: search,
+                contains: name,
                 mode: 'insensitive',
               },
             },
@@ -110,7 +110,7 @@ export const getAccountsWithGroups = async ({
                 ? {
                     some: {
                       name: {
-                        contains: search,
+                        contains: name,
                         mode: 'insensitive',
                       },
                     },
@@ -136,12 +136,12 @@ export const getAccountsWithGroups = async ({
 
 export const getAccountsByGroup = async ({
   accountGroupID,
-  search = '',
+  name = '',
   page = 1,
   pageSize,
 }: {
   accountGroupID: string
-  search?: string
+  name?: string
   page?: number
   pageSize?: number
 }) => {
@@ -156,7 +156,7 @@ export const getAccountsByGroup = async ({
       accounts: {
         where: {
           name: {
-            contains: search,
+            contains: name,
             mode: 'insensitive',
           },
         },

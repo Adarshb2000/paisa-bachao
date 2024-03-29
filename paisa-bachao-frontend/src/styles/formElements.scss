@@ -1,0 +1,52 @@
+.input {
+  --_color: var(--secondary);
+  position: relative;
+  display: block;
+  margin: 1rem 0;
+  font-size: 1rem;
+  font-weight: 400;
+  > span {
+    position: absolute;
+    line-height: 100%;
+    cursor: text;
+    top: 20px;
+    min-width: max-content;
+    left: 0.75rem;
+    color: var(--tertiary);
+    background: var(--dark);
+    transition:
+      top 0.5s,
+      left 0.5s,
+      font-size 0.5s;
+    z-index: 1;
+    &:has(+ *:active, + *:focus, + *:not(:placeholder-shown)) {
+      top: -5px;
+      left: 0.5rem;
+      font-size: 0.75rem;
+      padding: 0 0.25rem;
+    }
+  }
+  &:has(> *:focus) {
+    --_color: var(--primary);
+    > span {
+      color: var(--primary);
+    }
+  }
+  > input,
+  > textarea {
+    padding: 0.5rem 1rem;
+    width: 100%;
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-bottom-color: var(--_color);
+    transition: border 0.5s;
+    outline: none;
+    &:active,
+    &:focus,
+    &:not(:placeholder-shown) {
+      border-radius: 0.25rem;
+      font-size: 1rem;
+      border: 1px solid var(--_color);
+    }
+  }
+}

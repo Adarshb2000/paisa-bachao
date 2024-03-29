@@ -24,7 +24,7 @@ const AddButton: FC<Props> = ({ children }) => {
           e.stopPropagation()
         }}
       >
-        {contentVisible && <div className='content'>{children}</div>}
+        <div className='content'>{children}</div>
         <button
           className={`btn-primary flex h-16 w-16 items-center justify-center rounded-full bg-primary hover:scale-125`}
           onClick={() => {

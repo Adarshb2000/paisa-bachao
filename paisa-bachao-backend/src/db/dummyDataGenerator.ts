@@ -2,12 +2,13 @@ import { Transaction } from '@prisma/client'
 import prisma from '.'
 import { choice, randomNumber, randomWord } from '../Helpers/random'
 import { createTransaction } from '../Transactions/queries'
+import { faker } from '@faker-js/faker'
 
 export const generateDummyAccounts = async (count: number = 10) => {
   const accounts = []
   for (let i = 0; i < count; i++) {
     accounts.push({
-      name: randomWord(5),
+      name: faker.person.firstName(),
       balance: 0,
     })
   }
@@ -16,16 +17,32 @@ export const generateDummyAccounts = async (count: number = 10) => {
   })
 }
 
-export const generateDummyAccountGroups = async (count: number = 10) => {
+export const generateDummyAccountGroups = async (count: number = 3) => {
   const accountGroups = []
   for (let i = 0; i < count; i++) {
     accountGroups.push({
-      name: randomWord(),
+      name: faker.finance.accountName(),
     })
   }
-  return await prisma.accountGroup.createMany({
+  await prisma.accountGroup.createMany({
     data: accountGroups,
+    skipDuplicates: true,
   })
+  const createdAccountGroups = await prisma.accountGroup.findMany()
+  const accounts = await prisma.account.findMany()
+  for (let i = 0; i < randomNumber(accounts.length); i += 1) {
+    const account = choice(accounts)
+    if (account.accountGroupID) continue
+
+    await prisma.account.update({
+      where: {
+        id: account.id,
+      },
+      data: {
+        accountGroupID: choice(createdAccountGroups).id,
+      },
+    })
+  }
 }
 
 export const generateDummyTransactions = async (count: number = 10) => {

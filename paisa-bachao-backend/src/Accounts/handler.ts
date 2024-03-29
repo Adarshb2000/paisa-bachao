@@ -43,7 +43,7 @@ export const CreateAccountGroup: Handler = async (req, res) => {
 export const GetAccounts: Handler = async (req, res) => {
   const {
     groupID = false,
-    search = '',
+    name = '',
     grouped = false,
     page = 1,
     pageSize,
@@ -55,7 +55,7 @@ export const GetAccounts: Handler = async (req, res) => {
       // Search by group
       accounts = queries.getAccountsByGroup({
         accountGroupID: groupID.toString(),
-        search: search.toString(),
+        name: name.toString(),
         page: +page,
         pageSize: pageSize ? +pageSize : undefined,
       })
@@ -64,18 +64,18 @@ export const GetAccounts: Handler = async (req, res) => {
       const singles = {
         name: 'Single',
         accounts: await queries.getAccounts({
-          search: search.toString(),
+          name: name.toString(),
           singles: true,
         }),
       }
       const groups = await queries.getAccountsWithGroups({
-        search: search.toString(),
+        name: name.toString(),
       })
       accounts = [singles, ...groups]
     } else {
       // Return all accounts
       accounts = await queries.getAccounts({
-        search: search.toString(),
+        name: name.toString(),
         page: +page,
         pageSize: pageSize ? +pageSize : undefined,
       })
@@ -96,10 +96,10 @@ export const GetAccount: Handler = async (req, res) => {
 }
 
 export const GetAccountGroups: Handler = async (req, res) => {
-  const { search = '', accounts = false, pageSize = 10, page = 1 } = req.query
+  const { name = '', accounts = false, pageSize = 10, page = 1 } = req.query
   try {
     const accountGroups = await queries.getAccountsWithGroups({
-      search: search.toString(),
+      name: name.toString(),
       accounts: accounts === 'true',
       page: +page,
       pageSize: +pageSize,

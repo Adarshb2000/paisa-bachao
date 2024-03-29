@@ -5,7 +5,16 @@ import { addAccount } from '../action'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { DNA } from 'react-loader-spinner'
 import DataList from '../../../Components/DataList'
-import { AccountGroup } from '../account'
+import { AccountGroup } from '../../../types/APIResponseData'
+
+const OptionDispaly = ({
+  option: account,
+}: {
+  option: AccountGroup | undefined
+}) => <span>{account?.name ?? ''}</span>
+
+const getDisplayValue = (accountGroup: AccountGroup | undefined) =>
+  accountGroup?.name ?? ''
 
 const AddAccount = () => {
   const [accountName, setAccountName] = useState('')
@@ -57,34 +66,37 @@ const AddAccount = () => {
           <>
             <div className='form-control input'>
               <label htmlFor='name' className='form-label input'>
-                Account Name *
+                <span>Account Name</span>
+                <input
+                  id='name'
+                  type='text'
+                  value={accountName}
+                  placeholder=''
+                  onChange={e => setAccountName(e.target.value)}
+                />
               </label>
-              <input
-                id='name'
-                type='text'
-                value={accountName}
-                onChange={e => setAccountName(e.target.value)}
-              />
             </div>
             <div className='form-control input'>
               <label htmlFor='balance' className='form-label input'>
-                Balance
+                <span>Balance</span>
+                <input
+                  id='balance'
+                  type='number'
+                  value={initialBalance}
+                  placeholder=''
+                  onChange={e => setInitialBalance(e.target.value)}
+                />
               </label>
-              <input
-                id='balance'
-                type='number'
-                value={initialBalance}
-                onChange={e => setInitialBalance(e.target.value)}
-              />
             </div>
             <DataList
               id='accountGroup'
               label='Account Group'
-              optionLabel={{
-                value: 'name',
-              }}
+              OptionDispaly={OptionDispaly}
+              getDisplayValue={getDisplayValue}
               setValue={setAccountGroup}
               dataURL={`${import.meta.env.VITE_BACKEND_URL}/accounts/groups`}
+              searchTag='name'
+              pageSize={3}
               className='form-control input'
             />
             <button type='submit' className='btn-block'>

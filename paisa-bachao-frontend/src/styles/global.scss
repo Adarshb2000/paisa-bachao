@@ -1,56 +1,7 @@
-.input {
-  position: relative;
-  > label {
-    position: absolute;
-    cursor: text;
-    bottom: 0;
-    left: 0.25rem;
-    font-size: 1rem;
-    color: var(--form-dark, --dark);
-    transition:
-      bottom 0.5s,
-      left 0.5s,
-      font-size 0.5s;
-    z-index: 1;
-
-    &:has(+ *:active, + *:focus, + *:not([value=''])) {
-      bottom: 78%;
-      left: 0.5rem;
-      font-size: 0.75rem;
-      padding: 0 0.25rem;
-      background-color: var(--form-secondary, --secondary);
-    }
-  }
-  > input,
-  > textarea {
-    font-weight: 400;
-    padding: 0.5rem 1rem;
-    background-color: transparent;
-    border: 1px solid transparent;
-    border-bottom-color: var(--form-dark, --dark);
-    transition: border 0.5s;
-    outline: none;
-
-    &:active,
-    &:focus,
-    &:not([value='']) {
-      border-radius: 0.25rem;
-      font-size: 1rem;
-      border: 1px solid var(--form-accent, --accent);
-    }
-  }
-}
-
 .btn-block {
   display: block;
   width: 100%;
   margin-top: 1rem;
-}
-
-button[type='submit'] {
-  background: var(--accent);
-  border-radius: 0.25rem;
-  padding: 0.5rem 1rem;
 }
 
 input::-webkit-outer-spin-button,

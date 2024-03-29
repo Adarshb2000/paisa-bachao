@@ -10,6 +10,7 @@ const devFn = async () => {
   await prisma.account.deleteMany()
   await prisma.accountGroup.deleteMany()
   await generateDummyAccounts()
+  await generateDummyAccountGroups()
   await generateDummyTransactions()
 }
 
