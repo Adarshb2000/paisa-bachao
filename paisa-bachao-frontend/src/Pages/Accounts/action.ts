@@ -1,6 +1,6 @@
 import { QueryFunction } from '@tanstack/react-query'
 import axios from 'axios'
-import { Account, AccountGroup } from './account'
+import { Account, AccountGroup } from '../../types/APIResponseData'
 
 export const getAccounts: QueryFunction = async ({
   queryKey: [, search],

@@ -1,47 +1,73 @@
-import { useState } from 'react'
+import { FC, useCallback, useEffect, useState } from 'react'
 import DataList from '../../../Components/DataList'
 import { Account } from '../../../types/APIResponseData'
 
-const AccountListElement = ({ option }: { option: Account }) => {
+const AccountListElement = ({ option }: { option: Account | undefined }) => {
   return (
     <>
-      <span>{option.name}</span>
-      <span>{option.accountGroup?.name}</span>
+      <span>{option?.name}</span>
+      <span>{option?.accountGroup?.name}</span>
     </>
   )
 }
 
-const getDisplayValue = (option: Account | undefined) => option?.name ?? ''
+const getDisplayValue = (option: Account | undefined) => option?.name || ''
 
-const AccountInput = () => {
-  const [account, setAccount] = useState<Account | undefined>({} as Account)
+const AccountInput: FC<AccountInputProps> = ({
+  defaultAccount = {} as Account,
+  onChange,
+  validations = 'none',
+  name,
+  id = 'account-search',
+  label = 'Account',
+}) => {
+  const [account, setAccount] = useState<Account | undefined>(defaultAccount)
+
+  useEffect(() => {
+    onChange(account ?? ({} as Account))
+  }, [account, onChange])
+
+  const handleInputChange = useCallback((value: string, options: Account[]) => {
+    const account = options.find(option => option.name === value)
+    if (account) {
+      setAccount(account)
+    } else {
+      setAccount({
+        name: value,
+      } as Account)
+    }
+  }, [])
 
   return (
-    <div>
+    <div className='relative'>
       <DataList
+        defaultValue={defaultAccount}
+        name={name}
         dataURL={`${import.meta.env.VITE_BACKEND_URL}/accounts`}
         OptionDispaly={AccountListElement}
         searchTag='name'
-        id='account-search'
-        label='Account'
+        id={id}
+        label={label}
         getDisplayValue={getDisplayValue}
-        setValue={setAccount}
-        className='input'
+        onChange={handleInputChange}
+        validations={validations}
       />
-      {account?.accountGroup?.name ? (
-        <label className='input'>
-          <span>Account Group</span>
-          <input
-            type='text'
-            name='accountGroup'
-            id='account-group'
-            value={account?.accountGroup?.name ?? ''}
-            readOnly
-          />
-        </label>
+      {account?.accountGroup ? (
+        <span className='absolute right-3 top-3 text-xs'>
+          {account?.accountGroup?.name}
+        </span>
       ) : null}
     </div>
   )
 }
 
 export default AccountInput
+
+interface AccountInputProps {
+  defaultAccount?: Account
+  onChange: (account: Account) => void
+  id?: string
+  name: string
+  label?: string
+  validations?: 'none' | 'exists' | 'required'
+}

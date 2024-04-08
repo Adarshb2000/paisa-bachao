@@ -37,5 +37,17 @@ export interface Transactions {
 
   temporalStamp: string
   description: string
-  type: string
+}
+
+export interface TransactionDTO {
+  fromAccountID?: string | null
+  fromName: string
+
+  toAccountID?: string | null
+  toName: string
+
+  amount: number
+
+  temporalStamp: number
+  description: string
 }

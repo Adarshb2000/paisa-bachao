@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import './index.scss'
 import { navLinkClass } from '../../helpers/helpers'
 import { GiHamburgerMenu } from 'react-icons/gi'
@@ -11,9 +11,11 @@ const Header = () => {
 
   return (
     <header className='header'>
-      <h1>Paisa Bachao</h1>
+      <Link to={'/'} className='main-heading'>
+        Paisa Bachao
+      </Link>
       <button onClick={() => showNavbar(!navbar)}>
-        {!navbar ? <GiHamburgerMenu /> : <BiX />}
+        {!navbar ? <GiHamburgerMenu /> : <BiX className='text-3xl' />}
       </button>
       <nav
         className={navbar ? 'active' : ''}

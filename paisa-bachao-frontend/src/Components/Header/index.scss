@@ -65,8 +65,9 @@
   > nav {
     @media screen and (width <= 30rem) {
       position: absolute;
-      z-index: 9999;
+      z-index: -1;
       inset: 0;
+      overflow: hidden;
       > ul {
         position: absolute;
         inset: 0 0 0 100%;
@@ -76,8 +77,11 @@
         padding: 4rem 1.5rem;
         transition: left 0.4s ease-out;
       }
-      &.active > ul {
-        left: 40%;
+      &.active {
+        z-index: 9999;
+        > ul {
+          left: 40%;
+        }
       }
     }
   }
