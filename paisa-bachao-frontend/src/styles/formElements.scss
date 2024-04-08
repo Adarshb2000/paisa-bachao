@@ -1,11 +1,22 @@
+.form-group {
+  display: flex;
+  > * {
+    flex: 1;
+  }
+  gap: 10px;
+
+  @media screen and (max-width: 48rem) {
+    flex-direction: column;
+  }
+}
+
 .input {
   --_color: var(--secondary);
   position: relative;
   display: block;
-  margin: 1rem 0;
   font-size: 1rem;
   font-weight: 400;
-  > span {
+  > span.label {
     position: absolute;
     line-height: 100%;
     cursor: text;
@@ -13,7 +24,7 @@
     min-width: max-content;
     left: 0.75rem;
     color: var(--tertiary);
-    background: var(--dark);
+    background: inherit;
     transition:
       top 0.5s,
       left 0.5s,
@@ -23,7 +34,8 @@
       top: -5px;
       left: 0.5rem;
       font-size: 0.75rem;
-      padding: 0 0.25rem;
+      padding: 0 0.5rem;
+      background: var(--dark);
     }
   }
   &:has(> *:focus) {
@@ -48,5 +60,31 @@
       font-size: 1rem;
       border: 1px solid var(--_color);
     }
+
+    & + span.error {
+      color: var(--danger);
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+    }
+  }
+
+  &.invalid {
+    > input,
+    > input:focus,
+    > textarea,
+    > textarea:focus {
+      border-color: var(--danger);
+    }
+  }
+}
+
+.icon-input {
+  display: flex;
+  gap: 1rem;
+  > span {
+    font-size: 2.25rem;
+  }
+  > :last-child {
+    flex: 1;
   }
 }

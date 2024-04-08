@@ -1,9 +1,15 @@
 .datalist {
   &:focus-within {
-    .datalist {
+    .datalist_list {
       display: block;
     }
   }
+  > input + p.error {
+    color: var(--danger);
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+  }
+
   > ul {
     display: none;
     position: absolute;
@@ -14,7 +20,7 @@
     border: 1px solid var(--secondary);
     border-top-color: transparent;
     border-radius: 0.25rem;
-    z-index: 1;
+    z-index: 99999;
     > li {
       padding: 0.5rem 1rem;
       cursor: pointer;
@@ -22,6 +28,14 @@
       &.highlighted {
         background: var(--secondary);
       }
+    }
+  }
+
+  &.invalid {
+    > input,
+    > input:focus,
+    > ul {
+      border-color: var(--danger);
     }
   }
 }

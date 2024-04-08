@@ -12,6 +12,5 @@ export const getDataListOptions = async ({
       pageSize: params.pageSize,
     },
   })
-  console.log(response.data)
   return response.data.data
 }

@@ -12,6 +12,7 @@ import Account from './Pages/Accounts/account/index.tsx'
 import './index.css'
 import './styles/global.scss'
 import Test from './test.tsx'
+import AddTransaction from './Pages/Transactions/TransactionForms/AddSingleTransaction.tsx'
 
 const queryClient = new QueryClient()
 
@@ -24,6 +25,13 @@ const router = createBrowserRouter([
       { path: 'add-account', element: <AddAccount /> },
       { path: 'accounts', element: <Accounts /> },
       { path: 'accounts/:id', element: <Account /> },
+      {
+        path: 'transactions',
+        children: [
+          { path: '', element: <Home /> },
+          { path: 'add', element: <AddTransaction /> },
+        ],
+      },
     ],
   },
   {

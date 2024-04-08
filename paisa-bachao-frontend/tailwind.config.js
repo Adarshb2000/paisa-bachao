@@ -8,9 +8,10 @@ export default {
       },
       colors: {
         primary: 'var(--primary, #CBF7ED)',
-        secondary: 'var(--secondary, #FFA69E)',
+        secondary: 'var(--secondary)',
         accent: 'var(--accent, #E4FDE1)',
         tertiary: 'var(--tertiary, #FF686B)',
+        danger: 'var(--danger, #FF686B)',
         dark: 'var(--dark, #394053)',
         light: 'var(--light, #E8F0F2)',
         charcol: 'var(--charcol, #394053)',

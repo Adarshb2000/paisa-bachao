@@ -108,7 +108,7 @@ export const getTransactions = async ({
       transactionFragments: true,
     },
     orderBy: {
-      temporalStamp: 'desc',
+      temporalStamp: 'asc',
     },
     take: pageSize,
     skip: (page - 1) * pageSize,

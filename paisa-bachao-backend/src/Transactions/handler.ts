@@ -103,7 +103,7 @@ export const CreateTransaction: Handler = async (req, res) => {
       amount: +amount!,
       description,
       place,
-      temporalStamp,
+      temporalStamp: temporalStamp ? new Date(temporalStamp) : undefined,
       transactionFragments: transactionFragments
         ? {
             data: transactionFragments.data.map(fragment => ({
@@ -114,7 +114,9 @@ export const CreateTransaction: Handler = async (req, res) => {
               amount: +fragment.amount!,
               description: fragment.description,
               place: fragment.place,
-              temporalStamp: fragment.temporalStamp,
+              temporalStamp: fragment.temporalStamp
+                ? new Date(fragment.temporalStamp)
+                : undefined,
             })),
           }
         : undefined,

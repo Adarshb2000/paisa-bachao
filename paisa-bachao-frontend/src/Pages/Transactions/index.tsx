@@ -4,6 +4,8 @@ import { DNA } from 'react-loader-spinner'
 import { Transactions } from '../../types/APIResponseData'
 import ClickableCard from '../../Components/ClickableCard'
 import './index.scss'
+import AddButton from '../../Components/AddButton'
+import { Link } from 'react-router-dom'
 
 const Home = () => {
   const { data: transactions, isLoading } = useQuery<Transactions[]>({
@@ -35,6 +37,13 @@ const Home = () => {
           ))}
         </div>
       )}
+      <AddButton>
+        <div>
+          <div className='content'>
+            <Link to={'/transactions/add'}> Add Transaction </Link>
+          </div>
+        </div>
+      </AddButton>
     </div>
   )
 }
