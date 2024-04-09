@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
-import { getAccount } from '../action'
 import { Account as AccountType } from '../../../types/APIResponseData'
 
 import './index.scss'
 import { DNA } from 'react-loader-spinner'
+import { apiCall } from '../../../api/client'
 
 const Account = () => {
   const { id } = useParams()
@@ -20,8 +20,11 @@ const Account = () => {
     isError: boolean
     error: Error | null
   } = useQuery({
-    queryKey: ['account', id!],
-    queryFn: getAccount,
+    queryKey: ['account', id],
+    queryFn: () =>
+      apiCall<{ data: AccountType }>({ url: `/accounts/${id}` }).then(
+        res => res?.data ?? {},
+      ),
   })
 
   return (

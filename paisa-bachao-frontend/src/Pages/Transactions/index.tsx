@@ -1,17 +1,20 @@
 import { useQuery } from '@tanstack/react-query'
-import { getTransactions } from './action'
 import { DNA } from 'react-loader-spinner'
-import { Transactions } from '../../types/APIResponseData'
+import { Transaction } from '../../types/APIResponseData'
 import ClickableCard from '../../Components/ClickableCard'
 import './index.scss'
 import AddButton from '../../Components/AddButton'
 import { Link } from 'react-router-dom'
 import { client } from '../../hooks/useAuth'
+import { apiCall } from '../../api/client'
 
 const Home = () => {
-  const { data: transactions, isLoading } = useQuery<Transactions[]>({
+  const { data: transactions, isLoading } = useQuery<Transaction[]>({
     queryKey: ['transactions'],
-    queryFn: getTransactions,
+    queryFn: () =>
+      apiCall<{ data: Transaction[] }>({ url: '/transactions' }).then(
+        res => res?.data ?? [],
+      ),
   })
 
   return (

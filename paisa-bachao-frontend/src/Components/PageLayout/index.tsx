@@ -3,6 +3,8 @@ import Header from '../Header'
 import './index.scss'
 import useAuth from '../../hooks/useAuth'
 import { ThreeDots } from 'react-loader-spinner'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const PageLayout = () => {
   const auth = useAuth()
@@ -22,6 +24,15 @@ const PageLayout = () => {
       <main className='relative px-8 py-4'>
         <Outlet />
       </main>
+      <ToastContainer
+        autoClose={4000}
+        position='top-right'
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        draggable
+      />
     </div>
   )
 }

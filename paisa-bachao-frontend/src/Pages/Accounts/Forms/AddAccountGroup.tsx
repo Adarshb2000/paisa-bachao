@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import './index.scss'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { addAccountGroup } from '../action'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { DNA } from 'react-loader-spinner'
+import { apiCall } from '../../../api/client'
+import { AccountGroup } from '../../../types/APIResponseData'
 
 const AddAccountGroup = () => {
   const [accountGroupName, setAccountGroupName] = useState('')
@@ -13,7 +14,12 @@ const AddAccountGroup = () => {
   const queryClient = useQueryClient()
 
   const createAccountGroup = useMutation({
-    mutationFn: addAccountGroup,
+    mutationFn: (data: { name: string }) =>
+      apiCall<{ data: AccountGroup }>({
+        url: '/accounts/groups',
+        method: 'POST',
+        data,
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries()
       setTimeout(() => {
@@ -32,7 +38,7 @@ const AddAccountGroup = () => {
         onSubmit={e => {
           e.preventDefault()
           if (!accountGroupName) return
-          createAccountGroup.mutate(accountGroupName)
+          createAccountGroup.mutate({ name: accountGroupName })
         }}
       >
         <h1 className='text-center text-xl font-semibold text-accent'>

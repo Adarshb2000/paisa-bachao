@@ -22,7 +22,7 @@ export interface AccountGroup {
   accounts: Account[]
 }
 
-export interface Transactions {
+export interface Transaction {
   id: number
   createdAt: string
   updatedAt: string
@@ -37,6 +37,12 @@ export interface Transactions {
 
   temporalStamp: string
   description: string
+}
+
+export interface CreateAccountDTO {
+  name: string
+  balance: number
+  accountGroupID: string
 }
 
 export interface TransactionDTO {

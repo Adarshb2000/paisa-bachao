@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query'
-import { getDataListOptions } from './action'
 import {
   FunctionComponent as FC,
   KeyboardEventHandler,
@@ -11,6 +10,7 @@ import {
 import '../../styles/global.scss'
 import './index.scss'
 import { useFormContext, useFormState } from 'react-hook-form'
+import { apiCall } from '../../api/client'
 
 export default function DataList<T>({
   name,
@@ -62,12 +62,12 @@ export default function DataList<T>({
   }: {
     data: T[] | undefined
   } = useQuery({
-    queryKey: [
-      id,
-      dataURL,
-      { [searchTag]: input || undefined, pageSize: pageSize },
-    ],
-    queryFn: getDataListOptions,
+    queryKey: [id, dataURL, searchTag, input, pageSize],
+    queryFn: () =>
+      apiCall<{ data: T[] }>({
+        url: dataURL,
+        data: { [searchTag]: input, pageSize: pageSize },
+      }).then(res => res?.data ?? []),
   })
 
   const onKeyDown: KeyboardEventHandler<HTMLInputElement> = e => {
