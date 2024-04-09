@@ -38,7 +38,6 @@ const AddSingleTransaction = () => {
   }, [])
 
   const handleSubmit = () => {
-    console.log(transaction)
     transactionMutation.mutate(transaction)
   }
 

@@ -4,6 +4,8 @@ import { navLinkClass } from '../../helpers/helpers'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { useRef, useState } from 'react'
 import { BiX } from 'react-icons/bi'
+import { client } from '../../hooks/useAuth'
+import { IoLogOutOutline } from 'react-icons/io5'
 
 const Header = () => {
   const [navbar, showNavbar] = useState(false)
@@ -34,6 +36,11 @@ const Header = () => {
             <NavLink to={'/accounts'} className={navLinkClass}>
               Accounts
             </NavLink>
+          </li>
+          <li>
+            <button className='text-2xl' onClick={() => client.logout()}>
+              <IoLogOutOutline />
+            </button>
           </li>
         </ul>
       </nav>

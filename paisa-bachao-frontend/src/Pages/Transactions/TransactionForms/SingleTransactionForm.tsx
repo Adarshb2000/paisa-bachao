@@ -10,9 +10,7 @@ import { BiCommentDetail } from 'react-icons/bi'
 import Textarea from '../../../Components/Textarea'
 
 const defaultTransactionValue = {
-  from: null,
   fromName: '',
-  to: null,
   toName: '',
   amount: 0,
   temporalStamp: Date.now(),

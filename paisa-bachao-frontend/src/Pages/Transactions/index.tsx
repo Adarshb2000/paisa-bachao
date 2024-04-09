@@ -6,6 +6,7 @@ import ClickableCard from '../../Components/ClickableCard'
 import './index.scss'
 import AddButton from '../../Components/AddButton'
 import { Link } from 'react-router-dom'
+import { client } from '../../hooks/useAuth'
 
 const Home = () => {
   const { data: transactions, isLoading } = useQuery<Transactions[]>({
@@ -15,7 +16,11 @@ const Home = () => {
 
   return (
     <div>
-      <h1>Transactions</h1>
+      <h1 className='main-heading'>
+        <span className='text-3xl text-white'>Welcome Back, </span>
+        <span>{client.tokenParsed?.given_name}</span>
+      </h1>
+
       {isLoading ? <DNA width={80} height={80} /> : null}
       {!isLoading && transactions?.length === 0 ? (
         <p>No transactions yet</p>
