@@ -12,11 +12,7 @@ import '../../styles/global.scss'
 import './index.scss'
 import { useFormContext, useFormState } from 'react-hook-form'
 
-export default function DataList<
-  T extends {
-    id: string | undefined
-  },
->({
+export default function DataList<T>({
   name,
   id,
   label,
