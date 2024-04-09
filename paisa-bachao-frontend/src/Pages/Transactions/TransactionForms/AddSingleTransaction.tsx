@@ -1,10 +1,11 @@
 import { useCallback, useState } from 'react'
-import { TransactionDTO } from '../../../types/APIResponseData'
+import { Transaction, TransactionDTO } from '../../../types/APIResponseData'
 import { FormProvider, useForm } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools'
 import SingleTransactionForm from './SingleTransactionForm'
 import { useMutation } from '@tanstack/react-query'
-import { addTransaction } from '../action'
+import { toast } from 'react-toastify'
+import { apiCall } from '../../../api/client'
 
 const AddSingleTransaction = () => {
   const methods = useForm<TransactionDTO>({
@@ -13,13 +14,13 @@ const AddSingleTransaction = () => {
   const { control, handleSubmit: handleFormSubmission } = methods
 
   const transactionMutation = useMutation({
-    mutationFn: addTransaction,
+    mutationFn: (data: TransactionDTO) =>
+      apiCall<{ data: Transaction }>({ url: '/transactions', data }),
     onSuccess: () => {
-      alert('Transaction added successfully')
-    },
-    onError: error => {
-      alert('Failed to add transaction')
-      console.error(error)
+      toast('Transaction added successfully', {
+        type: 'success',
+        position: 'top-right',
+      })
     },
   })
 

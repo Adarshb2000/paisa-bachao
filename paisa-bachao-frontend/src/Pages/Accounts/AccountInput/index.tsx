@@ -43,7 +43,7 @@ const AccountInput: FC<AccountInputProps> = ({
       <DataList
         defaultValue={defaultAccount}
         name={name}
-        dataURL={`${import.meta.env.VITE_BACKEND_URL}/accounts`}
+        dataURL={'/accounts'}
         OptionDispaly={AccountListElement}
         searchTag='name'
         id={id}

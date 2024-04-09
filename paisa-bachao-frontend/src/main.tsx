@@ -1,20 +1,44 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import {
+  MutationCache,
+  QueryCache,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
 
 import AddAccount from './Pages/Accounts/Forms/AddAccount.tsx'
 import Accounts from './Pages/Accounts'
 import PageLayout from './Components/PageLayout'
 import Home from './Pages/Transactions/index.tsx'
-import Account from './Pages/Accounts/account/index.tsx'
+import Account from './Pages/Accounts/Account/index.tsx'
 
 import './index.css'
 import './styles/global.scss'
 import Test from './test.tsx'
 import AddTransaction from './Pages/Transactions/TransactionForms/AddSingleTransaction.tsx'
+import { toast } from 'react-toastify'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  queryCache: new QueryCache({
+    onError: error => {
+      toast(error.message, {
+        type: 'error',
+        position: 'top-right',
+      })
+    },
+  }),
+  mutationCache: new MutationCache({
+    onError: error => {
+      toast(error.message, {
+        type: 'error',
+        autoClose: 5000,
+        position: 'top-right',
+      })
+    },
+  }),
+})
 
 const router = createBrowserRouter([
   {

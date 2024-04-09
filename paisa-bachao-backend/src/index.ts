@@ -5,7 +5,13 @@ import cors from 'cors'
 import transactionRouter from './Transactions/routes'
 
 const app = express()
-app.use(cors())
+app.use(
+  cors({
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    origin: process.env.origins?.split(' ') ?? 'http://localhost:3000',
+    credentials: true,
+  })
+)
 app.use(morgan('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))

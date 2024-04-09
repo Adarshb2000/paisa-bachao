@@ -1,13 +1,18 @@
 import { useCallback, useState } from 'react'
 import './index.scss'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { addAccount } from '../action'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { DNA } from 'react-loader-spinner'
 import DataList from '../../../Components/DataList'
-import { Account, AccountGroup } from '../../../types/APIResponseData'
+import {
+  Account,
+  AccountGroup,
+  CreateAccountDTO,
+} from '../../../types/APIResponseData'
 import { FormProvider, useForm } from 'react-hook-form'
 import CurrencyInput from '../../../Components/CurrencyInput'
+import { apiCall } from '../../../api/client'
+import { toast } from 'react-toastify'
 
 const OptionDispaly = ({
   option: account,
@@ -19,12 +24,11 @@ const getDisplayValue = (accountGroup: AccountGroup | undefined) =>
   accountGroup?.name ?? ''
 
 const AddAccount = () => {
-  const [account, setAccount] = useState({
+  const [account, setAccount] = useState<CreateAccountDTO>({
     name: '',
     balance: 0,
     accountGroupID: '',
   })
-  const [accountName, setAccountName] = useState('')
 
   const methods = useForm<Account>()
 
@@ -34,17 +38,23 @@ const AddAccount = () => {
   const queryClient = useQueryClient()
 
   const createAccount = useMutation({
-    mutationFn: addAccount,
+    mutationFn: (account: CreateAccountDTO) =>
+      apiCall<Account>({
+        url: '/accounts',
+        method: 'POST',
+        data: account,
+      }),
     onSuccess: () => {
+      toast('Account Added Successfully', {
+        type: 'success',
+        position: 'top-right',
+      })
       queryClient.invalidateQueries()
       setTimeout(() => {
         if (hash === '#add-button') {
           navigate('')
         }
       }, 1000)
-    },
-    onError: error => {
-      console.error(error)
     },
   })
 
@@ -77,10 +87,6 @@ const AddAccount = () => {
           </h1>
           {createAccount.isPending ? (
             <DNA width={80} height={80} />
-          ) : createAccount.isError ? (
-            <div>Error...</div>
-          ) : createAccount.isSuccess ? (
-            <div>Success...</div>
           ) : (
             <>
               <div className='form-control input'>
@@ -90,10 +96,14 @@ const AddAccount = () => {
                     id='name'
                     type='text'
                     required
-                    value={accountName}
+                    value={account.name}
                     placeholder=''
-                    onChange={e => setAccountName(e.target.value.trim())}
-                    onBlur={e => setAccountName(e.target.value.trim())}
+                    onChange={e =>
+                      setAccount({ ...account, name: e.target.value.trim() })
+                    }
+                    onBlur={e =>
+                      setAccount({ ...account, name: e.target.value.trim() })
+                    }
                   />
                 </label>
               </div>
@@ -111,7 +121,7 @@ const AddAccount = () => {
                 onChange={handleAccountGroupChange}
                 name='accountGroup'
                 validations='exists'
-                dataURL={`${import.meta.env.VITE_BACKEND_URL}/accounts/groups`}
+                dataURL={'/accounts/groups'}
                 searchTag='name'
                 pageSize={3}
                 className='form-control input'
