@@ -3,6 +3,8 @@ import morgan from 'morgan'
 import accountRouter from './Accounts/routes'
 import cors from 'cors'
 import transactionRouter from './Transactions/routes'
+import authHandler from './Auth/handler'
+import sessionInjector from './db/sessionInjector'
 
 const app = express()
 app.use(
@@ -15,6 +17,9 @@ app.use(
 app.use(morgan('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+
+app.use(authHandler)
+app.use(sessionInjector)
 
 app.get('/', (req, res) => {
   res.send({ message: 'Hello World' })

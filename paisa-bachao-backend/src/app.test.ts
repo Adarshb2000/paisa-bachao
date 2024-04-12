@@ -1,6 +1,19 @@
 import request from 'supertest'
 import app from '.'
 import prisma from './db'
+import { Handler } from 'express'
+
+jest.mock(
+  './Auth/handler',
+  (): Handler => (req, res, next) => {
+    req.user = {
+      email: 'test@test.com',
+      id: '123',
+      name: 'Test User',
+    }
+    next()
+  }
+)
 
 describe('Basic', () => {
   it('should be able to get the basic ', async () => {

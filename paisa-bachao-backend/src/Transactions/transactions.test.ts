@@ -1,8 +1,19 @@
 import request from 'supertest'
 import app from '../index'
-import { choice, randomNumber, randomWord } from '../Helpers/random'
-import { getBalanceUpdatesFromTransactions } from './queryHelpers'
-import { Decimal } from '@prisma/client/runtime/library'
+import { randomNumber, randomWord } from '../Helpers/random'
+import { Handler } from 'express'
+
+jest.mock(
+  '../Auth/handler',
+  (): Handler => (req, res, next) => {
+    req.user = {
+      email: 'test@test.com',
+      id: '123',
+      name: 'Test User',
+    }
+    next()
+  }
+)
 
 describe('Transactions', () => {
   it('should be able to create a transaction given two newly created accounts', async () => {

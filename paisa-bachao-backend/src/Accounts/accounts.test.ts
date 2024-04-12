@@ -1,6 +1,19 @@
 import request from 'supertest'
 import app from '../index'
 import { randomNumber, randomWord } from '../Helpers/random'
+import { Handler } from 'express'
+
+jest.mock(
+  '../Auth/handler',
+  (): Handler => (req, res, next) => {
+    req.user = {
+      email: 'test@test.com',
+      id: '123',
+      name: 'Test User',
+    }
+    next()
+  }
+)
 
 describe('Accounts', () => {
   it('should return 200 status code for GET /accounts', async () => {

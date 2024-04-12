@@ -8,11 +8,14 @@ import { HTTPError } from '../Error/HTTPError'
 export const CreateAccount: Handler = async (req, res) => {
   const { name, balance = '0', accountGroupID } = req.body
   try {
-    const account = await queries.createAccount({
-      name,
-      balance: +balance,
-      accountGroupID,
-    })
+    const account = await queries.createAccount(
+      {
+        name,
+        balance: +balance,
+        accountGroupID,
+      },
+      req.prisma
+    )
     res.status(201).json({ data: account })
   } catch (error: any) {
     errorHandler(error, res)
@@ -29,7 +32,7 @@ export const CreateAccountGroup: Handler = async (req, res) => {
   }
 
   try {
-    const accountGroup = await prisma.accountGroup.create({
+    const accountGroup = await req.prisma.accountGroup.create({
       data: {
         name,
       },
@@ -53,32 +56,44 @@ export const GetAccounts: Handler = async (req, res) => {
 
     if (groupID) {
       // Search by group
-      accounts = queries.getAccountsByGroup({
-        accountGroupID: groupID.toString(),
-        name: name.toString(),
-        page: +page,
-        pageSize: pageSize ? +pageSize : undefined,
-      })
+      accounts = queries.getAccountsByGroup(
+        {
+          accountGroupID: groupID.toString(),
+          name: name.toString(),
+          page: +page,
+          pageSize: pageSize ? +pageSize : undefined,
+        },
+        req.prisma
+      )
     } else if (grouped) {
       // Return accounts clustered by group
       const singles = {
         name: 'Single',
-        accounts: await queries.getAccounts({
-          name: name.toString(),
-          singles: true,
-        }),
+        accounts: await queries.getAccounts(
+          {
+            name: name.toString(),
+            singles: true,
+          },
+          req.prisma
+        ),
       }
-      const groups = await queries.getAccountsWithGroups({
-        name: name.toString(),
-      })
+      const groups = await queries.getAccountsWithGroups(
+        {
+          name: name.toString(),
+        },
+        req.prisma
+      )
       accounts = [singles, ...groups]
     } else {
       // Return all accounts
-      accounts = await queries.getAccounts({
-        name: name.toString(),
-        page: +page,
-        pageSize: pageSize ? +pageSize : undefined,
-      })
+      accounts = await queries.getAccounts(
+        {
+          name: name.toString(),
+          page: +page,
+          pageSize: pageSize ? +pageSize : undefined,
+        },
+        req.prisma
+      )
     }
     res.status(200).json({ data: accounts || [] })
   } catch (error: any) {
@@ -89,7 +104,9 @@ export const GetAccounts: Handler = async (req, res) => {
 export const GetAccount: Handler = async (req, res) => {
   const id = req.params.id
   try {
-    res.status(200).json({ data: await queries.getAccountByID({ id }) })
+    res
+      .status(200)
+      .json({ data: await queries.getAccountByID({ id }, req.prisma) })
   } catch (error: any) {
     errorHandler(error, res)
   }
@@ -98,12 +115,15 @@ export const GetAccount: Handler = async (req, res) => {
 export const GetAccountGroups: Handler = async (req, res) => {
   const { name = '', accounts = false, pageSize = 10, page = 1 } = req.query
   try {
-    const accountGroups = await queries.getAccountsWithGroups({
-      name: name.toString(),
-      accounts: accounts === 'true',
-      page: +page,
-      pageSize: +pageSize,
-    })
+    const accountGroups = await queries.getAccountsWithGroups(
+      {
+        name: name.toString(),
+        accounts: accounts === 'true',
+        page: +page,
+        pageSize: +pageSize,
+      },
+      req.prisma
+    )
     res.status(200).json({ data: accountGroups })
   } catch (error: any) {
     errorHandler(error, res)
@@ -113,7 +133,9 @@ export const GetAccountGroups: Handler = async (req, res) => {
 export const GetAccountGroup: Handler = async (req, res) => {
   const id = req.params.id
   try {
-    res.status(200).json({ data: await queries.getAccountGroupByID({ id }) })
+    res.status(200).json({
+      data: await queries.getAccountGroupByID({ id }, req.prisma),
+    })
   } catch (error: any) {
     errorHandler(error, res)
   }
@@ -124,11 +146,14 @@ export const UpdateAccountBalance: Handler = async (req, res) => {
   const { balance, initialBalance } = req.body
 
   try {
-    const account = await queries.updateAccountBalance({
-      balance: +balance,
-      id,
-      initialBalance: +initialBalance,
-    })
+    const account = await queries.updateAccountBalance(
+      {
+        balance: +balance,
+        id,
+        initialBalance: +initialBalance,
+      },
+      req.prisma
+    )
     res.status(200).json({ data: account })
   } catch (error: any) {
     errorHandler(error, res)
@@ -139,7 +164,7 @@ export const EditAccount: Handler = async (req, res) => {
   const id = req.params.id
   const { name } = req.body
   try {
-    const account = await prisma.account.update({
+    const account = await req.prisma.account.update({
       where: {
         id: id,
       },
@@ -158,7 +183,7 @@ export const EditAccountGroup: Handler = async (req, res) => {
   const { name } = req.body
   try {
     if (!name) throw new HTTPError('Invalid input: Name is required!', 422)
-    const accountGroup = await prisma.accountGroup.update({
+    const accountGroup = await req.prisma.accountGroup.update({
       where: {
         id: id,
       },
@@ -176,11 +201,14 @@ export const UpdateAccountMembers: Handler = async (req, res) => {
   const accountGroupID = req.params.id
   const { link, accountID } = req.body
   try {
-    await queries.updateAccountGroupMembers({
-      accountID,
-      accountGroupID,
-      link,
-    })
+    await queries.updateAccountGroupMembers(
+      {
+        accountID,
+        accountGroupID,
+        link,
+      },
+      req.prisma
+    )
     res.status(204).end()
   } catch (error: any) {
     errorHandler(error, res)
@@ -190,7 +218,7 @@ export const UpdateAccountMembers: Handler = async (req, res) => {
 export const DeleteAccount: Handler = async (req, res) => {
   const id = req.params.id
   try {
-    await prisma.account.delete({
+    await req.prisma.account.delete({
       where: {
         id,
       },
@@ -204,7 +232,7 @@ export const DeleteAccount: Handler = async (req, res) => {
 export const DeleteAccountGroup: Handler = async (req, res) => {
   const id = req.params.id
   try {
-    await prisma.accountGroup.delete({
+    await req.prisma.accountGroup.delete({
       where: {
         id,
       },
