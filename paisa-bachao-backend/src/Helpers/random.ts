@@ -22,4 +22,4 @@ export const randomLine = (length: number = 10) => {
     .join(' ')
 }
 
-export const choice = (arr: any[]) => arr[randomNumber(arr.length)]
+export const choice = <T>(arr: T[]): T => arr[randomNumber(arr.length)]

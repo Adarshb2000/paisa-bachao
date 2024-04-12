@@ -6,12 +6,14 @@ import {
 } from './db/dummyDataGenerator'
 
 const devFn = async () => {
-  await prisma.transaction.deleteMany()
-  await prisma.account.deleteMany()
-  await prisma.accountGroup.deleteMany()
-  await generateDummyAccounts()
-  await generateDummyAccountGroups()
-  await generateDummyTransactions()
+  await prisma.transaction
+    .deleteMany()
+    .then(() => prisma.account.deleteMany())
+    .then(() => prisma.accountGroup.deleteMany())
+    .then(() => prisma.transaction.deleteMany())
+    .then(() => generateDummyAccounts())
+    .then(() => generateDummyAccountGroups())
+    .then(() => generateDummyTransactions())
 }
 
 export default devFn

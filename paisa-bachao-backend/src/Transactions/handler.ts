@@ -29,18 +29,21 @@ export const GetTransactions: Handler = async (req, res) => {
     page?: number
     pageSize?: number
   } = req.query
-  const transactions = await queries.getTransactions({
-    startDate: startDate ? new Date(startDate) : undefined,
-    endDate: endDate ? new Date(endDate) : undefined,
-    toAccountID,
-    fromAccountID,
-    account,
-    tags,
-    amount,
-    amountRange,
-    page,
-    pageSize,
-  })
+  const transactions = await queries.getTransactions(
+    {
+      startDate: startDate ? new Date(startDate) : undefined,
+      endDate: endDate ? new Date(endDate) : undefined,
+      toAccountID,
+      fromAccountID,
+      account,
+      tags,
+      amount,
+      amountRange,
+      page,
+      pageSize,
+    },
+    req.prisma
+  )
   res.json({
     data: transactions,
   })
@@ -49,7 +52,7 @@ export const GetTransactions: Handler = async (req, res) => {
 export const GetTransaction: Handler = async (req, res) => {
   const { id } = req.params
   try {
-    const transaction = await queries.getTransaction({ id })
+    const transaction = await queries.getTransaction({ id }, req.prisma)
     if (!transaction) {
       res.status(404).json({ message: 'Transaction not found' })
     } else {
@@ -95,32 +98,35 @@ export const CreateTransaction: Handler = async (req, res) => {
   }
 
   try {
-    const transaction = await queries.createTransaction({
-      fromAccountID,
-      toAccountID,
-      fromName,
-      toName,
-      amount: +amount!,
-      description,
-      place,
-      temporalStamp: temporalStamp ? new Date(temporalStamp) : undefined,
-      transactionFragments: transactionFragments
-        ? {
-            data: transactionFragments.data.map(fragment => ({
-              fromAccountID: fragment.fromAccountID,
-              toAccountID: fragment.toAccountID,
-              fromName: fragment.fromName,
-              toName: fragment.toName,
-              amount: +fragment.amount!,
-              description: fragment.description,
-              place: fragment.place,
-              temporalStamp: fragment.temporalStamp
-                ? new Date(fragment.temporalStamp)
-                : undefined,
-            })),
-          }
-        : undefined,
-    })
+    const transaction = await queries.createTransaction(
+      {
+        fromAccountID,
+        toAccountID,
+        fromName,
+        toName,
+        amount: +amount!,
+        description,
+        place,
+        temporalStamp: temporalStamp ? new Date(temporalStamp) : undefined,
+        transactionFragments: transactionFragments
+          ? {
+              data: transactionFragments.data.map(fragment => ({
+                fromAccountID: fragment.fromAccountID,
+                toAccountID: fragment.toAccountID,
+                fromName: fragment.fromName,
+                toName: fragment.toName,
+                amount: +fragment.amount!,
+                description: fragment.description,
+                place: fragment.place,
+                temporalStamp: fragment.temporalStamp
+                  ? new Date(fragment.temporalStamp)
+                  : undefined,
+              })),
+            }
+          : undefined,
+      },
+      req.prisma
+    )
     res.status(201).json({ data: transaction })
   } catch (e) {
     errorHandler(e, res)
@@ -146,16 +152,20 @@ export const EditTransaction: Handler = async (req, res) => {
   }
 
   try {
-    const transaction = await queries.editTransaction(id, {
-      fromAccountID,
-      toAccountID,
-      fromName,
-      toName,
-      amount: amount ? +amount : undefined,
-      description,
-      place,
-      temporalStamp: temporalStamp ? new Date(temporalStamp) : undefined,
-    })
+    const transaction = await queries.editTransaction(
+      id,
+      {
+        fromAccountID,
+        toAccountID,
+        fromName,
+        toName,
+        amount: amount ? +amount : undefined,
+        description,
+        place,
+        temporalStamp: temporalStamp ? new Date(temporalStamp) : undefined,
+      },
+      req.prisma
+    )
 
     res.status(200).json({ data: transaction })
   } catch (e) {
@@ -166,7 +176,7 @@ export const EditTransaction: Handler = async (req, res) => {
 export const DeleteTransaction: Handler = async (req, res) => {
   try {
     const { id } = req.params
-    await queries.deleteTransaction(id)
+    await queries.deleteTransaction(id, req.prisma)
     res.status(204).send()
   } catch (e) {
     errorHandler(e, res)

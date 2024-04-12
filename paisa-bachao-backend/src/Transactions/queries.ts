@@ -1,9 +1,6 @@
-import {
-  updateAccountBalance,
-  updateMultipleAccountsBalances,
-} from '../Accounts/queries'
+import { PrismaClient } from '@prisma/client'
+import { updateMultipleAccountsBalances } from '../Accounts/queries'
 import { HTTPError } from '../Error/HTTPError'
-import prisma from '../db'
 import {
   amountFilter,
   amountRangeFilter,
@@ -13,14 +10,14 @@ import {
   nestedAccountFilter,
 } from './queryHelpers'
 import {
-  BalanceUpdate,
   CreateTransactionProps,
   EditTransactionProps,
   FiterProps,
 } from './types'
 
 export const createTransaction = async (
-  transaction: CreateTransactionProps
+  transaction: CreateTransactionProps,
+  prisma: PrismaClient
 ) => {
   const createdTransaction = await prisma.$transaction(async prisma => {
     const createdTransaction = await prisma.transaction.create({
@@ -37,8 +34,6 @@ export const createTransaction = async (
         place: transaction.place,
         temporalStamp: transaction.temporalStamp,
 
-        // ...transaction,
-
         transactionFragments: transaction.transactionFragments
           ? {
               createMany: {
@@ -54,7 +49,6 @@ export const createTransaction = async (
                   description: fragment.description,
                   place: fragment.place,
                   temporalStamp: fragment.temporalStamp,
-                  // ...fragment,
                 })),
               },
             }
@@ -70,7 +64,8 @@ export const createTransaction = async (
         createdTransaction.transactionFragments.length
           ? createdTransaction.transactionFragments
           : [createdTransaction]
-      )
+      ),
+      prisma as PrismaClient
     )
 
     return createdTransaction
@@ -79,17 +74,20 @@ export const createTransaction = async (
   return createdTransaction
 }
 
-export const getTransactions = async ({
-  startDate,
-  endDate,
-  toAccountID,
-  fromAccountID,
-  account,
-  amount,
-  amountRange,
-  page = 1,
-  pageSize = 10,
-}: FiterProps) => {
+export const getTransactions = async (
+  {
+    startDate,
+    endDate,
+    toAccountID,
+    fromAccountID,
+    account,
+    amount,
+    amountRange,
+    page = 1,
+    pageSize = 10,
+  }: FiterProps,
+  prisma: PrismaClient
+) => {
   const transactions = await prisma.transaction.findMany({
     where: {
       motherTransactionId: null,
@@ -116,7 +114,10 @@ export const getTransactions = async ({
   return transactions
 }
 
-export const getTransaction = async ({ id }: { id: string }) => {
+export const getTransaction = async (
+  { id }: { id: string },
+  prisma: PrismaClient
+) => {
   const transaction = await prisma.transaction.findUnique({
     where: {
       id,
@@ -130,7 +131,8 @@ export const getTransaction = async ({ id }: { id: string }) => {
 
 export const editTransaction = async (
   id: string,
-  transaction: EditTransactionProps
+  transaction: EditTransactionProps,
+  prisma: PrismaClient
 ) => {
   const updatedTransaction = await prisma.$transaction(async prisma => {
     const oldTransaction = await prisma.transaction.findUnique({
@@ -138,7 +140,8 @@ export const editTransaction = async (
         id,
       },
     })
-    if (!oldTransaction) throw new HTTPError('Cannot process edit', 400)
+    if (!oldTransaction)
+      throw new HTTPError(`No transaction with id: ${id} found!`, 400)
 
     const balanceUpdates = [
       ...getEditBalanceUpdate({
@@ -166,7 +169,7 @@ export const editTransaction = async (
       },
     })
 
-    await updateMultipleAccountsBalances(balanceUpdates)
+    await updateMultipleAccountsBalances(balanceUpdates, prisma as PrismaClient)
 
     return updatedTransaction
   })
@@ -174,7 +177,7 @@ export const editTransaction = async (
   return updatedTransaction
 }
 
-export const deleteTransaction = async (id: string) => {
+export const deleteTransaction = async (id: string, prisma: PrismaClient) => {
   const deletedTransaction = await prisma.$transaction(async prisma => {
     const transaction = await prisma.transaction.findUnique({
       where: {
@@ -187,7 +190,8 @@ export const deleteTransaction = async (id: string) => {
 
     if (transaction) {
       await updateMultipleAccountsBalances(
-        getBalanceUpdatesFromTransactions(transaction.transactionFragments)
+        getBalanceUpdatesFromTransactions(transaction.transactionFragments),
+        prisma as PrismaClient
       )
 
       return await prisma.transaction.delete({

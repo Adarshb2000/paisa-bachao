@@ -36,6 +36,8 @@ model Transaction {
 
   motherTransaction   Transaction? @relation("fragments", fields: [motherTransactionId], references: [id])
   motherTransactionId String?
+
+  userID String?
 }
 
 // Tag are the tags for transactions
@@ -48,8 +50,13 @@ model Tag {
   name  String
   color String
   icon  String
+  usage Int
 
   transactions Transaction[]
+
+  userID String?
+
+  @@index([name, userID])
 }
 
 // Account are user accounts
@@ -58,7 +65,7 @@ model Account {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  name    String  @unique
+  name    String
   balance Decimal @default(0)
 
   accountGroup   AccountGroup? @relation(references: [id], fields: [accountGroupID], onUpdate: SetNull, onDelete: SetNull)
@@ -67,7 +74,10 @@ model Account {
   fromTransactions Transaction[] @relation("FromAccount")
   toTransactions   Transaction[] @relation("ToAccount")
 
-  @@index(name)
+  userID String?
+
+  @@unique([userID, name])
+  @@index([userID, name])
 }
 
 // Account Groups are collection of accounts
@@ -77,9 +87,12 @@ model AccountGroup {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  name String @unique
+  name String
 
   accounts Account[]
 
-  @@index(name)
+  userID String?
+
+  @@unique([name, userID])
+  @@index([name, userID])
 }

@@ -1,17 +1,20 @@
 import { Decimal } from '@prisma/client/runtime/library'
-import prisma from '../db'
 import { HTTPError } from '../Error/HTTPError'
 import { BalanceUpdate } from '../Transactions/types'
+import { PrismaClient } from '@prisma/client'
 
-export const createAccount = async ({
-  name,
-  balance,
-  accountGroupID,
-}: {
-  name: string
-  balance?: number
-  accountGroupID?: string
-}) => {
+export const createAccount = async (
+  {
+    name,
+    balance,
+    accountGroupID,
+  }: {
+    name: string
+    balance?: number
+    accountGroupID?: string
+  },
+  prisma: PrismaClient
+) => {
   if (!name) throw new HTTPError('Invalid input: Name is required.', 400)
 
   const account = await prisma.account.create({
@@ -33,7 +36,14 @@ export const createAccount = async ({
   return account
 }
 
-export const getAccountByID = async ({ id }: { id: string }) => {
+export const getAccountByID = async (
+  {
+    id,
+  }: {
+    id: string
+  },
+  prisma: PrismaClient
+) => {
   if (!id) throw new HTTPError('Invalid input: ID is required.', 400)
 
   const account = await prisma.account.findUnique({
@@ -50,17 +60,20 @@ export const getAccountByID = async ({ id }: { id: string }) => {
   return account
 }
 
-export const getAccounts = async ({
-  name = '',
-  page = 1,
-  pageSize,
-  singles = true,
-}: {
-  name?: string
-  page?: number
-  pageSize?: number
-  singles?: boolean
-}) => {
+export const getAccounts = async (
+  {
+    name = '',
+    page = 1,
+    pageSize,
+    singles = true,
+  }: {
+    name?: string
+    page?: number
+    pageSize?: number
+    singles?: boolean
+  },
+  prisma: PrismaClient
+) => {
   const accounts = await prisma.account.findMany({
     where: {
       name: name
@@ -84,17 +97,20 @@ export const getAccounts = async ({
   return accounts
 }
 
-export const getAccountsWithGroups = async ({
-  name = '',
-  accounts = false,
-  page = 1,
-  pageSize = 10,
-}: {
-  name?: string
-  accounts?: boolean
-  page?: number
-  pageSize?: number
-}) => {
+export const getAccountsWithGroups = async (
+  {
+    name = '',
+    accounts = false,
+    page = 1,
+    pageSize = 10,
+  }: {
+    name?: string
+    accounts?: boolean
+    page?: number
+    pageSize?: number
+  },
+  prisma: PrismaClient
+) => {
   const accountGroups = await prisma.accountGroup.findMany({
     where: {
       OR: name
@@ -134,17 +150,20 @@ export const getAccountsWithGroups = async ({
   return accountGroups
 }
 
-export const getAccountsByGroup = async ({
-  accountGroupID,
-  name = '',
-  page = 1,
-  pageSize,
-}: {
-  accountGroupID: string
-  name?: string
-  page?: number
-  pageSize?: number
-}) => {
+export const getAccountsByGroup = async (
+  {
+    accountGroupID,
+    name = '',
+    page = 1,
+    pageSize,
+  }: {
+    accountGroupID: string
+    name?: string
+    page?: number
+    pageSize?: number
+  },
+  prisma: PrismaClient
+) => {
   if (!accountGroupID)
     throw new HTTPError('Invalid input: Account Group ID is required.', 400)
 
@@ -172,7 +191,14 @@ export const getAccountsByGroup = async ({
   return accountGroup?.accounts || []
 }
 
-export const getAccountGroupByID = async ({ id }: { id: string }) => {
+export const getAccountGroupByID = async (
+  {
+    id,
+  }: {
+    id: string
+  },
+  prisma: PrismaClient
+) => {
   if (!id) throw new HTTPError('Invalid input: ID is required.', 400)
 
   const accountGroup = await prisma.accountGroup.findUnique({
@@ -192,15 +218,18 @@ export const getAccountGroupByID = async ({ id }: { id: string }) => {
   return accountGroup
 }
 
-export const updateAccountBalance = async ({
-  id,
-  balance,
-  initialBalance,
-}: {
-  id: string
-  balance: number
-  initialBalance: number
-}) => {
+export const updateAccountBalance = async (
+  {
+    id,
+    balance,
+    initialBalance,
+  }: {
+    id: string
+    balance: number
+    initialBalance: number
+  },
+  prisma: PrismaClient
+) => {
   if (!id) throw new HTTPError('Invalid input: ID is required.', 400)
   if (isNaN(balance) || isNaN(initialBalance))
     throw new HTTPError(
@@ -223,7 +252,8 @@ export const updateAccountBalance = async ({
 }
 
 export const updateMultipleAccountsBalances = async (
-  balanceUpdates: BalanceUpdate[]
+  balanceUpdates: BalanceUpdate[],
+  prisma: PrismaClient
 ) => {
   if (!balanceUpdates.length) return
   const { query, params } =
@@ -231,21 +261,24 @@ export const updateMultipleAccountsBalances = async (
   await prisma.$executeRawUnsafe(query, ...params)
 }
 
-export const updateAccountGroupMembers = async ({
-  accountID,
-  accountGroupID,
-  link = true,
-}: {
-  accountID: string
-  accountGroupID: string
-  link?: boolean
-}) => {
+export const updateAccountGroupMembers = async (
+  {
+    accountID,
+    accountGroupID,
+    link = true,
+  }: {
+    accountID: string
+    accountGroupID: string
+    link?: boolean
+  },
+  prisma: PrismaClient
+) => {
   if (!accountID)
     throw new HTTPError('Invalid input: Account ID is required.', 400)
   if (!accountGroupID)
     throw new HTTPError('Invalid input: Account Group ID is required.', 400)
 
-  const account = await getAccountByID({ id: accountID })
+  const account = await getAccountByID({ id: accountID }, prisma)
   if (!account)
     throw new HTTPError(
       `Invalid input: Account with id ${accountID} not found`,
