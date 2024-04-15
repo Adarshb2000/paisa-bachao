@@ -41,10 +41,16 @@ export default function DataList<T>({
     },
     validate: value => {
       switch (validations) {
-        case 'exists':
+        case 'required-exists':
           return (options?.[0] && getDisplayValue(options[0]) !== '') || 'Nah!'
         case 'required':
           return value !== '' || 'Required!'
+        case 'exists':
+          return (
+            value === '' ||
+            (options?.[0] && getDisplayValue(options[0]) !== '') ||
+            'Nah!'
+          )
         default:
           return true
       }
@@ -171,5 +177,5 @@ interface DataListProps<T> {
   hideOnNoData?: boolean
   pageSize?: number
   defaultValue?: T
-  validations?: 'none' | 'exists' | 'required'
+  validations?: 'none' | 'exists' | 'required' | 'required-exists'
 }
