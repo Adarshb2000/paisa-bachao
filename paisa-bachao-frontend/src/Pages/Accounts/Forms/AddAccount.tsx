@@ -31,6 +31,7 @@ const AddAccount = () => {
   })
 
   const methods = useForm<Account>()
+  const { errors } = methods.formState
 
   const { hash } = useLocation()
   const navigate = useNavigate()
@@ -90,21 +91,26 @@ const AddAccount = () => {
           ) : (
             <>
               <div className='form-control input'>
-                <label htmlFor='name' className='form-label input'>
+                <label
+                  htmlFor='name'
+                  className={`form-label input ${errors.name?.message ? 'invalid' : ''}`}
+                >
                   <span className='label'>Account Name</span>
                   <input
                     id='name'
                     type='text'
-                    required
                     value={account.name}
                     placeholder=''
-                    onChange={e =>
-                      setAccount({ ...account, name: e.target.value.trim() })
-                    }
-                    onBlur={e =>
-                      setAccount({ ...account, name: e.target.value.trim() })
-                    }
+                    {...methods.register('name', {
+                      validate: value =>
+                        value.trim().length >= 3 || 'Account Name is Required',
+                      onChange: e =>
+                        setAccount({ ...account, name: e.target.value }),
+                    })}
                   />
+                  {errors.name?.message ? (
+                    <span className='error'>{errors.name?.message}</span>
+                  ) : null}
                 </label>
               </div>
               <CurrencyInput

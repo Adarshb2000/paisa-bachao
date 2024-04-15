@@ -4,8 +4,8 @@ import { choice, randomNumber, randomWord } from '../Helpers/random'
 import { faker } from '@faker-js/faker'
 
 const users = [
-  '87659171-2796-44ab-80cd-3b7bcc2c21ce',
-  '3f6535d8-aea7-4045-a56c-2899e2b0396b',
+  '9d1ecef9-ba8b-4c5c-bb96-16e4c04fc2f4',
+  '5a360096-82f2-49c1-a30d-fb2447fb6069',
 ]
 
 export const generateDummyAccounts = async (count: number = 10) => {
