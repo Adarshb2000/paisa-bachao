@@ -15,7 +15,11 @@ const AddSingleTransaction = () => {
 
   const transactionMutation = useMutation({
     mutationFn: (data: TransactionDTO) =>
-      apiCall<{ data: Transaction }>({ url: '/transactions', data }),
+      apiCall<{ data: Transaction }>({
+        url: '/transactions',
+        data,
+        method: 'POST',
+      }),
     onSuccess: () => {
       toast('Transaction added successfully', {
         type: 'success',
