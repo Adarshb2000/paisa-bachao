@@ -91,3 +91,19 @@
     flex: 1;
   }
 }
+
+.submit {
+  display: block;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  background-color: var(--primary);
+  color: var(--light);
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.5s;
+  &:hover {
+    background-color: var(--secondary);
+  }
+}

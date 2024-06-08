@@ -74,10 +74,11 @@ export const CreateTransaction: Handler = async (req, res) => {
     place,
     temporalStamp,
     transactionFragments,
+    tags,
   }: createTransactionsBody = req.body
 
   if (
-    transactionFragments?.data.length
+    transactionFragments?.data?.length
       ? transactionFragments.data?.some(
           fragment => !fragment.fromName || !fragment.toName
         )
@@ -108,6 +109,7 @@ export const CreateTransaction: Handler = async (req, res) => {
         description,
         place,
         temporalStamp: temporalStamp ? new Date(temporalStamp) : undefined,
+        tags: tags || [],
         transactionFragments: transactionFragments
           ? {
               data: transactionFragments.data.map(fragment => ({
@@ -121,6 +123,7 @@ export const CreateTransaction: Handler = async (req, res) => {
                 temporalStamp: fragment.temporalStamp
                   ? new Date(fragment.temporalStamp)
                   : undefined,
+                tags: fragment.tags || [],
               })),
             }
           : undefined,

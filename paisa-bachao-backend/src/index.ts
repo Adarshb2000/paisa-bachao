@@ -5,6 +5,8 @@ import cors from 'cors'
 import transactionRouter from './Transactions/routes'
 import authHandler from './Auth/handler'
 import sessionInjector from './db/sessionInjector'
+import prisma from './db'
+import tagRouter from './Tags/routes'
 
 const app = express()
 app.use(
@@ -27,6 +29,7 @@ app.get('/', (req, res) => {
 
 app.use('/accounts', accountRouter)
 app.use('/transactions', transactionRouter)
+app.use('/tags', tagRouter)
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Ye kaha aa gaye aap?' })

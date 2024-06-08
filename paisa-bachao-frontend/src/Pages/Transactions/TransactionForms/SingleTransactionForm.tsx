@@ -8,6 +8,9 @@ import DatePicker from '../../../Components/DatePicker'
 import { FiCalendar } from 'react-icons/fi'
 import { BiCommentDetail } from 'react-icons/bi'
 import Textarea from '../../../Components/Textarea'
+import DataList from '../../../Components/DataList'
+import TagInput from '../../Tags/TagInput'
+import { FaTags } from 'react-icons/fa'
 
 const defaultTransactionValue = {
   fromName: '',
@@ -113,6 +116,12 @@ const SingleTransactionForm = ({
           id='temploral-stamp'
           validations='required'
         />
+      </label>
+      <label htmlFor='tag'>
+        <span className='text-secondary'>
+          <FaTags />
+        </span>
+        <TagInput />
       </label>
       <label className='icon-input'>
         <span className='text-secondary'>

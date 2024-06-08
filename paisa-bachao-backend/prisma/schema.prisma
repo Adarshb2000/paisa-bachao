@@ -49,14 +49,36 @@ model Tag {
 
   name  String
   color String
-  icon  String
-  usage Int
+  icon  String @default("tag")
+  usage Int    @default(0)
 
   transactions Transaction[]
 
   userID String?
 
+  tagGraphPrimary TagGraph[] @relation("primary")
+  tagGraphRelated TagGraph[] @relation("related")
+
   @@index([name, userID])
+}
+
+model TagGraph {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  primary      Tag    @relation("primary", fields: [primaryTagID], references: [id])
+  primaryTagID String
+
+  related      Tag    @relation("related", fields: [relatedTagID], references: [id])
+  relatedTagID String
+
+  weight Int
+
+  userID String?
+
+  @@unique([primaryTagID, relatedTagID, userID])
+  @@index([primaryTagID, userID])
 }
 
 // Account are user accounts
