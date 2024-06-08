@@ -335,7 +335,6 @@ describe('Transactions', () => {
       amount: amount,
     })
     const transaction = response.body.data
-    console.log(response.body)
     const deleteResponse = await request(app).delete(
       `/transactions/${transaction.id}`
     )
@@ -408,9 +407,7 @@ describe('Transaction with fragments', () => {
       })
 
     if (transactionResponse.status !== 201)
-      console.log(transactionResponse.body)
-
-    expect(transactionResponse.status).toBe(201)
+      expect(transactionResponse.status).toBe(201)
     const transaction = transactionResponse.body.data
     expect(transaction).toHaveProperty('id')
     expect(transaction).toHaveProperty('toAccountID')
