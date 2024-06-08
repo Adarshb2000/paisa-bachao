@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Tag" ALTER COLUMN "icon" SET DEFAULT 'tag',
+ALTER COLUMN "usage" SET DEFAULT 0;

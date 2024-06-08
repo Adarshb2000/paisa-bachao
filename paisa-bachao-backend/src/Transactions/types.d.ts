@@ -24,6 +24,7 @@ export interface CreateTransactionProps {
   transactionFragments?: {
     data: CreateTransactionProps[]
   }
+  tags?: string[]
 }
 
 export interface EditTransactionProps {
@@ -54,4 +55,5 @@ export interface createTransactionsBody {
   transactionFragments?: {
     data: createTransactionsBody[]
   }
+  tags?: string[]
 }

@@ -309,6 +309,46 @@ describe('Transactions', () => {
     )
     expect(updatedToAccount.balance).toBe(toAccountBalance.toString())
   })
+
+  it('should be able to handle balance updates on deleted transactions', async () => {
+    const fromAccountBalance = randomNumber(1000) - 500
+    const fromAccount = (
+      await request(app)
+        .post('/accounts')
+        .send({ name: randomWord(), balance: fromAccountBalance })
+    ).body.data
+
+    const toAccountBalance = randomNumber(1000) - 500
+    const toAccount = (
+      await request(app)
+        .post('/accounts')
+        .send({ name: randomWord(), balance: toAccountBalance })
+    ).body.data
+
+    const amount = randomNumber(1000)
+
+    const response = await request(app).post('/transactions').send({
+      fromAccountID: fromAccount.id,
+      toAccountID: toAccount.id,
+      fromName: fromAccount.name,
+      toName: toAccount.name,
+      amount: amount,
+    })
+    const transaction = response.body.data
+    const deleteResponse = await request(app).delete(
+      `/transactions/${transaction.id}`
+    )
+    expect(deleteResponse.status).toBe(204)
+
+    const updatedFromAccount = (
+      await request(app).get(`/accounts/${fromAccount.id}`)
+    ).body.data
+    const updatedToAccount = (
+      await request(app).get(`/accounts/${toAccount.id}`)
+    ).body.data
+    expect(updatedFromAccount.balance).toBe(fromAccountBalance.toString())
+    expect(updatedToAccount.balance).toBe(toAccountBalance.toString())
+  })
 })
 
 describe('Transaction with fragments', () => {
@@ -367,9 +407,7 @@ describe('Transaction with fragments', () => {
       })
 
     if (transactionResponse.status !== 201)
-      console.log(transactionResponse.body)
-
-    expect(transactionResponse.status).toBe(201)
+      expect(transactionResponse.status).toBe(201)
     const transaction = transactionResponse.body.data
     expect(transaction).toHaveProperty('id')
     expect(transaction).toHaveProperty('toAccountID')

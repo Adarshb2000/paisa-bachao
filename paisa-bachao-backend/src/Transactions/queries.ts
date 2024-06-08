@@ -14,6 +14,7 @@ import {
   EditTransactionProps,
   FiterProps,
 } from './types'
+import { updateManyTags } from '../Tags/queries'
 
 export const createTransaction = async (
   transaction: CreateTransactionProps,
@@ -33,6 +34,9 @@ export const createTransaction = async (
         description: transaction.description,
         place: transaction.place,
         temporalStamp: transaction.temporalStamp,
+        tags: {
+          connect: transaction.tags?.map(tag => ({ id: tag })),
+        },
 
         transactionFragments: transaction.transactionFragments
           ? {
@@ -67,6 +71,43 @@ export const createTransaction = async (
       ),
       prisma as PrismaClient
     )
+
+    // Adding tags to transaction fragments
+    createdTransaction.transactionFragments?.forEach(
+      async (fragment, index) => {
+        await prisma.transaction.update({
+          where: {
+            id: fragment.id,
+          },
+          data: {
+            tags: {
+              connect: transaction.transactionFragments?.data[index].tags?.map(
+                tag => ({ id: tag })
+              ),
+            },
+          },
+        })
+      }
+    )
+
+    const tags = new Map<string, number>()
+    transaction.tags?.forEach(tag => {
+      tags.set(tag, (tags.get(tag) || 0) + 1)
+    })
+    transaction.transactionFragments?.data.forEach(fragment => {
+      fragment.tags?.forEach(tag => {
+        tags.set(tag, (tags.get(tag) || 0) + 1)
+      })
+    })
+    const tagIncrementData = Array.from(tags.entries()).map(
+      ([tag, increment]) => ({
+        id: tag,
+        increment,
+      })
+    )
+    if (tagIncrementData.length > 0) {
+      await updateManyTags(tagIncrementData, prisma as PrismaClient)
+    }
 
     return createdTransaction
   })
@@ -184,25 +225,61 @@ export const deleteTransaction = async (id: string, prisma: PrismaClient) => {
         id,
       },
       include: {
-        transactionFragments: true,
+        transactionFragments: {
+          include: {
+            tags: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        },
+        tags: {
+          select: {
+            id: true,
+          },
+        },
       },
     })
 
-    if (transaction) {
-      await updateMultipleAccountsBalances(
-        getBalanceUpdatesFromTransactions(transaction.transactionFragments),
-        prisma as PrismaClient
-      )
+    if (!transaction) throw new HTTPError('Something went wrong', 400)
 
-      return await prisma.transaction.delete({
-        where: {
-          id,
-        },
-        include: {
-          transactionFragments: true,
-        },
+    await updateMultipleAccountsBalances(
+      getBalanceUpdatesFromTransactions(
+        transaction.transactionFragments.length
+          ? transaction.transactionFragments
+          : [transaction]
+      ).map(({ account, balance }) => ({ account, balance: -balance })),
+      prisma as PrismaClient
+    )
+
+    const tags = new Map<string, number>()
+    transaction.tags?.forEach(tag => {
+      tags.set(tag.id, (tags.get(tag.id) || 0) - 1)
+    })
+    transaction.transactionFragments?.forEach(fragment => {
+      fragment.tags?.forEach(tag => {
+        tags.set(tag.id, (tags.get(tag.id) || 0) - 1)
       })
+    })
+    const tagDecrementData = Array.from(tags.entries()).map(
+      ([id, increment]) => ({
+        id,
+        increment,
+      })
+    )
+    if (tagDecrementData.length > 0) {
+      await updateManyTags(tagDecrementData, prisma as PrismaClient)
     }
+
+    return await prisma.transaction.delete({
+      where: {
+        id,
+      },
+      include: {
+        transactionFragments: true,
+      },
+    })
   })
 
   return deletedTransaction

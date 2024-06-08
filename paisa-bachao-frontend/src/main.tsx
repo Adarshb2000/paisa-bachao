@@ -19,6 +19,7 @@ import './styles/global.scss'
 import Test from './test.tsx'
 import AddTransaction from './Pages/Transactions/TransactionForms/AddSingleTransaction.tsx'
 import { toast } from 'react-toastify'
+import Tags from './Pages/Tags/index.tsx'
 
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
@@ -54,6 +55,15 @@ const router = createBrowserRouter([
         children: [
           { path: '', element: <Home /> },
           { path: 'add', element: <AddTransaction /> },
+        ],
+      },
+      {
+        path: 'tags',
+        children: [
+          {
+            path: '',
+            element: <Tags />,
+          },
         ],
       },
     ],

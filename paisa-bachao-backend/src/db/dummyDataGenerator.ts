@@ -22,6 +22,24 @@ export const generateDummyAccounts = async (count: number = 10) => {
   })
 }
 
+export const generateDummyTags = () => {
+  const tags = [
+    'Food',
+    'Grocery',
+    'Travel',
+    'Shopping',
+    'Rent',
+    'Utilities',
+    'Health',
+    'Entertainment',
+    'Education',
+    'Miscellaneous',
+  ]
+  return prisma.tag.createMany({
+    data: tags.map((name) => ({ name, color: faker.color.rgb() })),
+  })
+}
+
 export const generateDummyAccountGroups = async (count: number = 3) => {
   const accountGroups = []
   for (let i = 0; i < count; i++) {

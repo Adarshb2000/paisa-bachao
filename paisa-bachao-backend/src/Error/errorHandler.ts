@@ -1,7 +1,7 @@
 import { Response } from 'express'
 
 const errorHandler = (error: any, res: Response) => {
-  console.log(error.message.split('\n').at(-1))
+  console.error(error)
   switch (error.code) {
     case typeof error.code === 'number' ? error.code : null:
       res.status(error.code).json({ message: error.message })
