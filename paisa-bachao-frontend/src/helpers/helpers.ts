@@ -29,3 +29,7 @@ export const formatCurrency = (number: string) => {
 
   return integerPart + (number.indexOf('.') !== -1 ? '.' + decimalPart : '')
 }
+
+export const objectCompare = (obj1: any, obj2: any) => {
+  return JSON.stringify(obj1) === JSON.stringify(obj2)
+}

@@ -11,14 +11,19 @@ import tagRouter from './Tags/routes'
 const app = express()
 app.use(
   cors({
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    origin: process.env.origins?.split(' ') ?? 'http://localhost:3000',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    origin: process.env.origins?.split(' ') ?? 'http://localhost:5173',
     credentials: true,
   })
 )
 app.use(morgan('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+
+app.use((req, res, next) => {
+  req.prisma = prisma
+  next()
+})
 
 app.use(authHandler)
 app.use(sessionInjector)

@@ -20,6 +20,7 @@ import Test from './test.tsx'
 import AddTransaction from './Pages/Transactions/TransactionForms/AddSingleTransaction.tsx'
 import { toast } from 'react-toastify'
 import Tags from './Pages/Tags/index.tsx'
+import AddSplitTransaction from './Pages/Transactions/TransactionForms/AddSplitTransaction.tsx'
 
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
@@ -54,7 +55,17 @@ const router = createBrowserRouter([
         path: 'transactions',
         children: [
           { path: '', element: <Home /> },
-          { path: 'add', element: <AddTransaction /> },
+          { path: 'add/single', element: <AddTransaction /> },
+          { path: 'add/split', element: <AddSplitTransaction /> },
+        ],
+      },
+      {
+        path: 'tags',
+        children: [
+          {
+            path: '',
+            element: <Tags />,
+          },
         ],
       },
       {

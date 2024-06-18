@@ -18,7 +18,7 @@ const DatePicker = ({
 }) => {
   const { register } = useFormContext()
   const props = register(id, {
-    value: value,
+    value: dayjs(value).format('YYYY-MM-DDTHH:mm'),
     onChange: e => {
       onChange(dayjs(e.target.value).valueOf())
     },
@@ -44,13 +44,7 @@ const DatePicker = ({
       className={`input date-picker ${errors[id]?.message ? 'invalid' : ''}`}
     >
       {label ? <span>{label}</span> : null}
-      <input
-        defaultValue={dayjs(value).format('YYYY-MM-DDTHH:mm')}
-        type='datetime-local'
-        id={id}
-        {...props}
-        {...rest}
-      />
+      <input type='datetime-local' id={id} {...props} {...rest} />
       {errors[id]?.message ? (
         <span className='error'>{errors[id]?.message.toString()}</span>
       ) : null}
