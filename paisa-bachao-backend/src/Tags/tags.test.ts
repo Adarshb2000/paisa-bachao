@@ -259,7 +259,9 @@ describe('Tags', () => {
     const deleteTransactionFragmentResponse = await request(app).delete(
       `/transactions/${responseTransaction.transactionFragments[0].id}`
     )
+
     expect(deleteTransactionFragmentResponse.status).toBe(204)
+
     const updatedTagsAfterDelete = await Promise.all(
       tags.map(tagId => request(app).get(`/tags/${tagId}`))
     )
