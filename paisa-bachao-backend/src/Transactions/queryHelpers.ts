@@ -1,5 +1,5 @@
-import { Account, Transaction } from '@prisma/client'
-import { BalanceUpdate, CreateTransactionProps } from './types'
+import { Transaction } from '@prisma/client'
+import { BalanceUpdate } from './types'
 import { Decimal } from '@prisma/client/runtime/library'
 
 export const dateFilter = (
@@ -115,28 +115,26 @@ export const getEditBalanceUpdate = ({
       })
     accountID &&
       balanceUpdates.push({
-        account: accountID!,
+        account: accountID,
         balance: +oldTransaction.amount * multiplier,
       })
+  } else if (!name || oldTransaction[`${type}Name`] === name) {
+    oldTransaction[`${type}AccountID`] &&
+      balanceUpdates.push({
+        account: oldTransaction[`${type}AccountID`]!,
+        balance: (+amount - +oldTransaction.amount) * multiplier,
+      })
   } else {
-    if (!name || oldTransaction[`${type}Name`] === name)
-      oldTransaction[`${type}AccountID`] &&
-        balanceUpdates.push({
-          account: oldTransaction[`${type}AccountID`]!,
-          balance: (+amount - +oldTransaction.amount) * multiplier,
-        })
-    else {
-      oldTransaction[`${type}AccountID`] &&
-        balanceUpdates.push({
-          account: oldTransaction[`${type}AccountID`]!,
-          balance: +oldTransaction.amount * -multiplier,
-        })
-      accountID &&
-        balanceUpdates.push({
-          account: accountID!,
-          balance: +amount * multiplier,
-        })
-    }
+    oldTransaction[`${type}AccountID`] &&
+      balanceUpdates.push({
+        account: oldTransaction[`${type}AccountID`]!,
+        balance: +oldTransaction.amount * -multiplier,
+      })
+    accountID &&
+      balanceUpdates.push({
+        account: accountID,
+        balance: +amount * multiplier,
+      })
   }
   return balanceUpdates
 }

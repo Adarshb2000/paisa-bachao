@@ -1,7 +1,8 @@
-import request from 'supertest'
-import app from '../index'
 import { randomNumber, randomWord } from '../Helpers/random'
+
 import { Handler } from 'express'
+import app from '../index'
+import request from 'supertest'
 
 jest.mock(
   '../Auth/handler',
@@ -75,6 +76,86 @@ describe('Accounts', () => {
     expect(updatedAccount).toHaveProperty('balance')
     expect(updatedAccount.name).toBe(name)
     expect(updatedAccount.balance).toBe(newBalance.toString())
+  })
+  it('should be able to handle account balance update on transaction fragment delete', async () => {
+    const testAccountsNames = [
+      { name: randomWord(), balance: 1000 },
+      { name: randomWord(), balance: 1000 },
+      { name: randomWord(), balance: 1000 },
+      { name: randomWord(), balance: 1000 },
+    ]
+    const response = await Promise.all(
+      testAccountsNames.map(account =>
+        request(app).post('/accounts').send(account)
+      )
+    )
+    const accounts = response.map(account => account.body.data)
+    console.log({
+      transactionFragments: [
+        {
+          amount: 50,
+          fromName: accounts[0].name,
+          toName: accounts[1].name,
+          fromAccountID: accounts[0].id,
+          toAccountID: accounts[1].id,
+        },
+        {
+          amount: 55,
+          fromName: accounts[2].name,
+          toName: accounts[3].name,
+          fromAccountID: accounts[2].id,
+          toAccountID: accounts[3].id,
+        },
+      ],
+    })
+
+    const transactionResponse = await request(app)
+      .post('/transactions')
+      .send({
+        amount: 105,
+        transactionFragments: {
+          data: [
+            {
+              amount: 50,
+              fromName: accounts[0].name,
+              toName: accounts[1].name,
+              fromAccountID: accounts[0].id,
+              toAccountID: accounts[1].id,
+            },
+            {
+              amount: 55,
+              fromName: accounts[2].name,
+              toName: accounts[3].name,
+              fromAccountID: accounts[2].id,
+              toAccountID: accounts[3].id,
+            },
+          ],
+        },
+      })
+    console.log(transactionResponse.body.data)
+    expect(transactionResponse.status).toBe(201)
+    const updatedAccount = await Promise.all(
+      accounts.map(account => request(app).get(`/accounts/${account.id}`))
+    )
+    expect(updatedAccount[0].body.data.balance).toBe('950')
+    expect(updatedAccount[1].body.data.balance).toBe('1050')
+    expect(updatedAccount[2].body.data.balance).toBe('945')
+    expect(updatedAccount[3].body.data.balance).toBe('1055')
+
+    const transactionFragments =
+      transactionResponse.body.data.transactionFragments
+    const fragmentToDelete = transactionFragments[0]
+    const deleteFragmentResponse = await request(app).delete(
+      `/transactions/${fragmentToDelete.id}`
+    )
+    expect(deleteFragmentResponse.status).toBe(204)
+    const updatedAccountAfterDelete = await Promise.all(
+      accounts.map(account => request(app).get(`/accounts/${account.id}`))
+    )
+    expect(updatedAccountAfterDelete[0].body.data.balance).toBe('1000')
+    expect(updatedAccountAfterDelete[1].body.data.balance).toBe('1000')
+    expect(updatedAccountAfterDelete[2].body.data.balance).toBe('945')
+    expect(updatedAccountAfterDelete[3].body.data.balance).toBe('1055')
   })
 })
 

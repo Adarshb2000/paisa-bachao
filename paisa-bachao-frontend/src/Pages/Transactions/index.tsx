@@ -5,8 +5,9 @@ import ClickableCard from '../../Components/ClickableCard'
 import './index.scss'
 import AddButton from '../../Components/AddButton'
 import { Link } from 'react-router-dom'
-import { client } from '../../hooks/useAuth'
 import { apiCall } from '../../api/client'
+import { useContext } from 'react'
+import { AuthContext } from '../../Contexts/AuthContext'
 
 const Home = () => {
   const { data: transactions, isLoading } = useQuery<Transaction[]>({
@@ -17,11 +18,13 @@ const Home = () => {
       ),
   })
 
+  const auth = useContext(AuthContext)
+
   return (
     <div>
       <h1 className='main-heading'>
         <span className='text-3xl text-white'>Welcome Back, </span>
-        <span>{client.tokenParsed?.given_name}</span>
+        <span>{auth.name}</span>
       </h1>
 
       {isLoading ? <DNA width={80} height={80} /> : null}

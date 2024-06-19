@@ -8,7 +8,6 @@ import DatePicker from '../../../Components/DatePicker'
 import { FiCalendar } from 'react-icons/fi'
 import { BiCommentDetail } from 'react-icons/bi'
 import Textarea from '../../../Components/Textarea'
-import DataList from '../../../Components/DataList'
 import TagInput from '../../Tags/TagInput'
 import { FaTags } from 'react-icons/fa'
 
@@ -24,10 +23,12 @@ const SingleTransactionForm = ({
   defaultValue = defaultTransactionValue,
   className = '',
   handleChange,
+  id = '',
 }: {
   defaultValue?: TransactionDTO
   className?: string
   handleChange: (transaction: TransactionDTO) => void
+  id?: string
 }) => {
   const [transaction, setTransaction] = useState<TransactionDTO>(defaultValue)
 
@@ -58,32 +59,32 @@ const SingleTransactionForm = ({
 
   return (
     <div className={`add-transactions ${className}`}>
-      <label htmlFor='from-account' className='icon-input'>
+      <label htmlFor={`from-account-${id}`} className='icon-input'>
         <span className='translate-y-3 text-danger'>
           <GiPayMoney />
         </span>
         <AccountInput
           validations='required'
-          name='from-account'
+          name={`from-account-${id}`}
           label=''
-          id='from-account'
+          id={`from-account-${id}`}
           onChange={onChangeFromAccount}
         />
       </label>
-      <label htmlFor='to-account' className='icon-input'>
+      <label htmlFor={`to-account-${id}`} className='icon-input'>
         <span className='text-primary'>
           <GiReceiveMoney />
         </span>
         <AccountInput
-          name='to-account'
+          name={`to-account-${id}`}
           label=''
-          id='to-account'
+          id={`to-account-${id}`}
           onChange={onChangeToAccount}
           validations='required'
         />
       </label>
 
-      <label htmlFor='amount' className='icon-input'>
+      <label htmlFor={`amount-${id}`} className='icon-input'>
         <span className='text-primary'>
           <GiMoneyStack />
         </span>
@@ -96,7 +97,7 @@ const SingleTransactionForm = ({
             }))
           }}
           label=''
-          id='amount'
+          id={`amount-${id}`}
           validations='nonzero'
         />
       </label>
@@ -113,7 +114,7 @@ const SingleTransactionForm = ({
             }))
           }}
           label=''
-          id='temploral-stamp'
+          id={`temploral-stamp-${id}`}
           validations='required'
         />
       </label>
@@ -123,7 +124,7 @@ const SingleTransactionForm = ({
         </span>
         <TagInput />
       </label>
-      <label className='icon-input'>
+      <label className='icon-input' htmlFor={`description-${id}`}>
         <span className='text-secondary'>
           <BiCommentDetail />
         </span>
@@ -133,6 +134,7 @@ const SingleTransactionForm = ({
             onChange={value =>
               setTransaction({ ...transaction, description: value })
             }
+            id={`description-${id}`}
           ></Textarea>
         </label>
       </label>

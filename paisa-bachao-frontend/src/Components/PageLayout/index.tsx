@@ -1,13 +1,15 @@
-import { Outlet } from 'react-router-dom'
-import Header from '../Header'
 import './index.scss'
-import useAuth from '../../hooks/useAuth'
-import { ThreeDots } from 'react-loader-spinner'
-import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
+import { AuthContext } from '../../Contexts/AuthContext'
+import Header from '../Header'
+import { Outlet } from 'react-router-dom'
+import { ThreeDots } from 'react-loader-spinner'
+import { ToastContainer } from 'react-toastify'
+import { useContext } from 'react'
+
 const PageLayout = () => {
-  const auth = useAuth()
+  const auth = useContext(AuthContext)
   if (auth.loading) {
     return (
       <div className='grid h-screen w-screen place-items-center'>
