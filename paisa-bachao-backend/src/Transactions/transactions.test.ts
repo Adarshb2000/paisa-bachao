@@ -1,7 +1,8 @@
-import request from 'supertest'
-import app from '../index'
 import { randomNumber, randomWord } from '../Helpers/random'
+
 import { Handler } from 'express'
+import app from '../index'
+import request from 'supertest'
 
 jest.mock(
   '../Auth/handler',
@@ -166,7 +167,7 @@ describe('Transactions', () => {
     const newAmount = randomNumber(1000)
     const updateResponse = await request(app)
       .patch(`/transactions/${transaction.id}`)
-      .send({ amount: newAmount })
+      .send({ ...transaction, amount: newAmount })
     const updatedTransaction = updateResponse.body.data
     expect(updateResponse.status).toBe(200)
     expect(updatedTransaction).toHaveProperty('id')
@@ -226,7 +227,11 @@ describe('Transactions', () => {
     ).body.data
     const updateResponse = await request(app)
       .patch(`/transactions/${transaction.id}`)
-      .send({ fromAccountID: newFromAccount.id, fromName: newFromAccount.name })
+      .send({
+        ...transaction,
+        fromAccountID: newFromAccount.id,
+        fromName: newFromAccount.name,
+      })
     const updatedTransaction = updateResponse.body.data
     expect(updateResponse.status).toBe(200)
     expect(updatedTransaction).toHaveProperty('id')
@@ -286,7 +291,7 @@ describe('Transactions', () => {
     const newFromAccount = randomWord()
     const updateResponse = await request(app)
       .patch(`/transactions/${transaction.id}`)
-      .send({ amount: newAmount, toName: newFromAccount })
+      .send({ ...transaction, amount: newAmount, toName: newFromAccount })
     const updatedTransaction = updateResponse.body.data
     expect(updateResponse.status).toBe(200)
     expect(updatedTransaction).toHaveProperty('id')
@@ -502,6 +507,8 @@ describe('Transaction with fragments', () => {
     const updatedTransactionFragmentResponse = await request(app)
       .patch(`/transactions/${editableTransactionFragment.id}`)
       .send({
+        ...editableTransactionFragment,
+        fromAccountID: undefined,
         fromName: randomWord(),
       })
 

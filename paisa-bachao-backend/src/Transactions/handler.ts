@@ -144,13 +144,18 @@ export const EditTransaction: Handler = async (req, res) => {
     fromName,
     toName,
     amount,
-    description,
-    place,
-    temporalStamp,
+    description = '',
+    place = '',
+    temporalStamp = new Date(),
+    tags = [],
   }: createTransactionsBody = req.body
 
-  if ((fromAccountID && !fromName) || (toAccountID && !toName)) {
+  if (!fromName || !toName) {
     res.status(400).json({ error: 'fromName and toName is required' })
+    return
+  }
+  if (!isValidAmount(amount)) {
+    res.status(400).json({ error: 'amount is required' })
     return
   }
 
@@ -162,10 +167,11 @@ export const EditTransaction: Handler = async (req, res) => {
         toAccountID,
         fromName,
         toName,
-        amount: amount ? +amount : undefined,
+        amount: +amount!,
         description,
         place,
-        temporalStamp: temporalStamp ? new Date(temporalStamp) : undefined,
+        temporalStamp,
+        tags,
       },
       req.prisma
     )

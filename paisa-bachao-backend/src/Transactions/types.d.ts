@@ -29,13 +29,14 @@ export interface CreateTransactionProps {
 
 export interface EditTransactionProps {
   fromAccountID?: string
-  fromName?: string
+  fromName: string
   toAccountID?: string
-  toName?: string
-  amount?: number
-  description?: string
-  place?: string
-  temporalStamp?: Date
+  toName: string
+  amount: number
+  description: string
+  place: string
+  temporalStamp: Date
+  tags: string[]
 }
 
 export interface BalanceUpdate {

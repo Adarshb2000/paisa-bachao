@@ -1,5 +1,6 @@
 import axios, { AxiosError } from 'axios'
-import { client } from '../hooks/useAuth'
+
+import keycloak from './keycloak'
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL,
@@ -30,7 +31,7 @@ export async function apiCall<T>({
 }
 
 apiClient.interceptors.request.use(config => {
-  config.headers.Authorization = `Bearer ${client.token}`
+  config.headers.Authorization = `Bearer ${keycloak.token}`
   return config
 })
 
