@@ -58,3 +58,15 @@ export interface createTransactionsBody {
   }
   tags?: string[]
 }
+
+export type FilterType = {
+  [key: string]: string | number | boolean | Date | undefined | Array
+}
+export type SortType = {
+  [key: string]: 'asc' | 'desc' | ''
+}
+
+export type FilterAndSort = {
+  sort: Sort
+  filter: Filter
+}

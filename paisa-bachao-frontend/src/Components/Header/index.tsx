@@ -1,12 +1,13 @@
-import { Link, NavLink } from 'react-router-dom'
 import './index.scss'
-import { navLinkClass } from '../../helpers/helpers'
-import { GiHamburgerMenu } from 'react-icons/gi'
+
+import { Link, NavLink } from 'react-router-dom'
 import { useContext, useRef, useState } from 'react'
-import { BiX } from 'react-icons/bi'
-import { IoLogOutOutline } from 'react-icons/io5'
+
 import { AuthContext } from '../../Contexts/AuthContext'
-// import useAuth from '../../hooks/useAuth'
+import { BiX } from 'react-icons/bi'
+import { GiHamburgerMenu } from 'react-icons/gi'
+import { IoLogOutOutline } from 'react-icons/io5'
+import { navLinkClass } from '../../helpers/helpers'
 
 const Header = () => {
   const [navbar, setNavbar] = useState(false)
@@ -15,9 +16,7 @@ const Header = () => {
 
   return (
     <header className='header'>
-      <Link to={'/'} className='main-heading'>
-        Paisa Bachao
-      </Link>
+      <Link to={'/'}>Paisa Bachao</Link>
       <button onClick={() => setNavbar(!navbar)}>
         {!navbar ? <GiHamburgerMenu /> : <BiX className='text-3xl' />}
       </button>

@@ -1,15 +1,18 @@
-import { Router } from 'express'
 import {
   CreateTransaction,
   DeleteTransaction,
   EditTransaction,
+  GetRefinedTransactions,
   GetTransaction,
   GetTransactions,
 } from './handler'
 
+import { Router } from 'express'
+
 const transactionRouter = Router()
 
 transactionRouter.route('/').get(GetTransactions).post(CreateTransaction)
+transactionRouter.post('/search', GetRefinedTransactions)
 
 transactionRouter
   .route('/:id')

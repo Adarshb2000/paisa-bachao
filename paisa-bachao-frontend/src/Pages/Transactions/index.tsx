@@ -1,32 +1,76 @@
-import { useQuery } from '@tanstack/react-query'
-import { DNA } from 'react-loader-spinner'
-import { Transaction } from '../../types/APIResponseData'
-import ClickableCard from '../../Components/ClickableCard'
 import './index.scss'
+
+import { useEffect, useState } from 'react'
+
 import AddButton from '../../Components/AddButton'
+import ClickableCard from '../../Components/ClickableCard'
+import { DNA } from 'react-loader-spinner'
+import FilterAndSort from '../../Components/FilterAndSort'
+import { FilterAndSortType } from '../../Components/FilterAndSort/types'
 import { Link } from 'react-router-dom'
+import { Transaction } from '../../types/APIResponseData'
 import { apiCall } from '../../api/client'
-import { useContext } from 'react'
-import { AuthContext } from '../../Contexts/AuthContext'
+import { useQuery } from '@tanstack/react-query'
 
 const Home = () => {
-  const { data: transactions, isLoading } = useQuery<Transaction[]>({
-    queryKey: ['transactions'],
-    queryFn: () =>
-      apiCall<{ data: Transaction[] }>({ url: '/transactions' }).then(
-        res => res?.data ?? [],
-      ),
+  const [filterAndSort, setFilterAndSort] = useState<FilterAndSortType>({
+    filter: {},
+    sort: {
+      temporalStamp: 'desc',
+    },
   })
 
-  const auth = useContext(AuthContext)
+  const { data: transactions, isLoading } = useQuery<Transaction[]>({
+    queryKey: ['transactions', filterAndSort],
+    queryFn: async () => {
+      console.log('fetching transactions with', filterAndSort)
+      return apiCall<{ data: Transaction[] }>({
+        url: '/transactions/search',
+        method: 'POST',
+        data: {
+          params: {
+            filter: filterAndSort.filter,
+            sort: Object.entries(filterAndSort.sort).map(
+              ([attribute, order]) => ({ [attribute]: order }),
+            ),
+          },
+        },
+      }).then(res => res?.data ?? [])
+    },
+  })
+
+  useEffect(() => {
+    console.log(filterAndSort.filter)
+  }, [filterAndSort.filter])
 
   return (
     <div>
-      <h1 className='main-heading'>
-        <span className='text-3xl text-white'>Welcome Back, </span>
-        <span>{auth.name}</span>
-      </h1>
-
+      <h1 className='main-heading'>Transactions</h1>
+      <FilterAndSort
+        filterAndSortState={[filterAndSort, setFilterAndSort]}
+        sortItems={[
+          {
+            label: 'Date',
+            attribute: 'temporalStamp',
+            ascLabel: 'Newest',
+            descLabel: 'Oldest',
+          },
+          {
+            label: 'Amount',
+            attribute: 'amount',
+            ascLabel: 'Lowest',
+            descLabel: 'Highest',
+          },
+        ]}
+        filterItems={[
+          {
+            label: 'Amount',
+            attribute: 'amount',
+            filterType: 'range',
+            inputType: 'number',
+          },
+        ]}
+      />
       {isLoading ? <DNA width={80} height={80} /> : null}
       {!isLoading && transactions?.length === 0 ? (
         <p>No transactions yet</p>

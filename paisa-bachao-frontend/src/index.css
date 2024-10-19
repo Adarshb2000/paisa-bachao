@@ -6,13 +6,16 @@
   :root {
     color-scheme: dark light;
 
-    --primary: #2ecc71;
-    --secondary: #3498db;
-    --tertiary: #d5dbdb;
-    --accent: #f39c12;
-    --dark: #333333;
-    --light: #f9f9f9;
-    --danger: #e74c3c;
+    --primary-100: #4caf50;
+    --primary-200: #2a9235;
+    --primary-300: #005100;
+    --accent-100: #2196f3;
+    --accent-200: #003f8f;
+    --text-100: #ffffff;
+    --text-200: #e0e0e0;
+    --bg-100: #1a1a1a;
+    --bg-200: #292929;
+    --bg-300: #404040;
   }
 }
 

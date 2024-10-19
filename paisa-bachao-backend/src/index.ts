@@ -1,12 +1,12 @@
+import accountRouter from './Accounts/routes'
+import authHandler from './Auth/handler'
+import cors from 'cors'
 import express from 'express'
 import morgan from 'morgan'
-import accountRouter from './Accounts/routes'
-import cors from 'cors'
-import transactionRouter from './Transactions/routes'
-import authHandler from './Auth/handler'
-import sessionInjector from './db/sessionInjector'
 import prisma from './db'
+import sessionInjector from './db/sessionInjector'
 import tagRouter from './Tags/routes'
+import transactionRouter from './Transactions/routes'
 
 const app = express()
 app.use(
@@ -25,7 +25,11 @@ app.use((req, res, next) => {
   next()
 })
 
-app.use(authHandler)
+// app.use(authHandler)
+app.use((req, res, next) => {
+  req.user = { id: '123456', name: 'Test User', email: 'test@user.in' }
+  next()
+})
 app.use(sessionInjector)
 
 app.get('/', (req, res) => {

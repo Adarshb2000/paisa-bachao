@@ -7,6 +7,12 @@
   min-height: 70px;
   background-color: var(--background);
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.25);
+  position: relative;
+
+  > a {
+    font-size: 2rem;
+    color: var(--text-100);
+  }
 
   > * {
     flex: 1;
@@ -16,8 +22,8 @@
     position: absolute;
     right: 1rem;
     font-size: 1.5rem;
-    color: var(--primary);
-    z-index: 999999;
+    color: var(--primary-100);
+    z-index: 3;
     @include responsive-property(display, block, none);
   }
 
@@ -78,7 +84,7 @@
         transition: left 0.4s ease-out;
       }
       &.active {
-        z-index: 9999;
+        z-index: 2;
         > ul {
           left: 40%;
         }

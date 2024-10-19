@@ -1,6 +1,7 @@
 import {
   CreateTransactionProps,
   EditTransactionProps,
+  FilterAndSort,
   FiterProps,
 } from './types'
 import { PrismaClient, Transaction } from '@prisma/client'
@@ -114,6 +115,31 @@ export const createTransaction = async (
   })
 
   return createdTransaction
+}
+
+export const getRefinedTransactions = async (
+  {
+    params,
+    page,
+    pageSize,
+  }: { params: FilterAndSort; page: number; pageSize: number },
+  prisma: PrismaClient
+) => {
+  const { filter = {}, sort = {} } = params ?? { filter: {}, sort: {} }
+  console.log(filter, sort)
+  const transactions = await prisma.transaction.findMany({
+    where: {
+      motherTransactionId: null,
+      ...filter,
+    },
+    include: {
+      transactionFragments: true,
+    },
+    orderBy: sort,
+    take: pageSize,
+    skip: (page - 1) * pageSize,
+  })
+  return transactions
 }
 
 export const getTransactions = async (

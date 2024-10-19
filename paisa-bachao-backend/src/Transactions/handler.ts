@@ -1,7 +1,8 @@
 import * as queries from './queries'
 
+import { FilterAndSort, createTransactionsBody } from './types'
+
 import { Handler } from 'express'
-import { createTransactionsBody } from './types'
 import errorHandler from '../Error/errorHandler'
 import { isValidAmount } from './queryHelpers'
 
@@ -29,6 +30,7 @@ export const GetTransactions: Handler = async (req, res) => {
     page?: number
     pageSize?: number
   } = req.query
+
   const transactions = await queries.getTransactions(
     {
       startDate: startDate ? new Date(startDate) : undefined,
@@ -47,6 +49,25 @@ export const GetTransactions: Handler = async (req, res) => {
   res.json({
     data: transactions,
   })
+}
+
+export const GetRefinedTransactions: Handler = async (req, res) => {
+  const {
+    params,
+    page = 1,
+    pageSize = 10,
+  }: { params: FilterAndSort; page: number; pageSize: number } = req.body
+  try {
+    const transactions = await queries.getRefinedTransactions(
+      { params, page: +page, pageSize: +pageSize },
+      req.prisma
+    )
+    res.json({
+      data: transactions,
+    })
+  } catch (err) {
+    errorHandler(err, res)
+  }
 }
 
 export const GetTransaction: Handler = async (req, res) => {
