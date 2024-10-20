@@ -14,7 +14,10 @@ import { useQuery } from '@tanstack/react-query'
 
 const Home = () => {
   const [filterAndSort, setFilterAndSort] = useState<FilterAndSortType>({
-    filter: {},
+    filter: {
+      amount: {},
+      temporalStamp: {},
+    },
     sort: {
       temporalStamp: 'desc',
     },
@@ -64,10 +67,16 @@ const Home = () => {
         ]}
         filterItems={[
           {
-            label: 'Amount',
             attribute: 'amount',
             filterType: 'range',
-            inputType: 'number',
+            inputType: 'amount',
+            label: 'Amount',
+          },
+          {
+            attribute: 'temporalStamp',
+            filterType: 'range',
+            inputType: 'date',
+            label: 'Date',
           },
         ]}
       />

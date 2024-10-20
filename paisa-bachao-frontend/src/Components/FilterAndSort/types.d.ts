@@ -16,7 +16,7 @@ export interface RangeFilterType extends GenericFilterType {
   inputType: 'number' | 'date'
 }
 
-export type RangeFilterValueTypes = number | Date | null
+export type RangeFilterValueTypes = number | 'amount' | Date | null | undefined
 
 export type FilterType = {
   [key: string]: any

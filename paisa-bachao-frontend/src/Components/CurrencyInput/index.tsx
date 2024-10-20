@@ -60,7 +60,9 @@ const CurrencyInput = ({
         {...rest}
       />
       {errors[id]?.message ? (
-        <span className='error'>{errors[id]?.message?.toString()}</span>
+        <span className='error'>
+          {(errors[id]?.message as string)?.toString()}
+        </span>
       ) : null}
     </label>
   )

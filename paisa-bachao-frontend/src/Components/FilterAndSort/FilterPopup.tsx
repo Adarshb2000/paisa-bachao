@@ -15,14 +15,19 @@ const FilterPopup = ({
 
   return (
     <section className='filterContainer'>
-      <h4>Filter</h4>
+      <h3>Filter</h3>
       {filterItems.map((item, index) => {
         switch (item.filterType) {
           case 'range':
             return (
               <RangeFilter
                 initialValues={initialFilterState[item.attribute] ?? {}}
-                updateFilters={updateFilterState}
+                updateFilters={value => {
+                  updateFilterState({
+                    ...initialFilterState,
+                    ...value,
+                  })
+                }}
                 filterItem={item as RangeFilterType}
                 key={index}
               />
