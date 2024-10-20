@@ -1,5 +1,6 @@
 .transaction {
-  color: rgba($color: #000000, $alpha: 25);
+  background: var(--bg-100);
+  color: var(--text-100);
 
   .glance {
     margin-inline: auto;

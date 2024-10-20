@@ -1,12 +1,10 @@
-import { Transaction } from '@prisma/client'
-import prisma from '.'
 import { choice, randomNumber, randomWord } from '../Helpers/random'
-import { faker } from '@faker-js/faker'
 
-const users = [
-  '9d1ecef9-ba8b-4c5c-bb96-16e4c04fc2f4',
-  '5a360096-82f2-49c1-a30d-fb2447fb6069',
-]
+import { Transaction } from '@prisma/client'
+import { faker } from '@faker-js/faker'
+import prisma from '.'
+
+const users = ['123456', '5a360096-82f2-49c1-a30d-fb2447fb6069']
 
 export const generateDummyAccounts = async (count: number = 10) => {
   const accounts = []
@@ -36,7 +34,7 @@ export const generateDummyTags = () => {
     'Miscellaneous',
   ]
   return prisma.tag.createMany({
-    data: tags.map((name) => ({ name, color: faker.color.rgb() })),
+    data: tags.map(name => ({ name, color: faker.color.rgb() })),
   })
 }
 
@@ -94,7 +92,7 @@ export const generateDummyTransactions = async (count: number = 50) => {
         amount: randomNumber(100),
         description: randomWord(),
         place: randomWord(),
-        temporalStamp: new Date(),
+        temporalStamp: faker.date.anytime(),
         userID: fromAccout.userID || undefined,
       },
     })

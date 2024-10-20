@@ -1,0 +1,87 @@
+.filterContainer {
+  background-color: var(--bg-100);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+  padding: 1.5rem;
+  padding-bottom: 2.5rem;
+  color: var(--text-100);
+  border-radius: 0.5rem 0.5rem 0 0;
+  > h3 {
+    font-size: 2rem;
+    text-align: center;
+    color: var(--primary-100);
+    margin-bottom: -1rem;
+  }
+
+  > button {
+    text-align: left;
+    display: flex;
+    justify-content: center;
+    border-radius: 0.5rem;
+    font-size: 1.15rem;
+    padding: 0.5rem 1rem;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    background: var(--bg-200);
+    overflow: hidden;
+
+    &.active {
+      background: var(--accent-200);
+      // color: var(--text-100);
+    }
+    & + button {
+      margin-top: 1rem;
+    }
+  }
+}
+
+.range-filter {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  border-radius: 0.5rem;
+  background: var(--bg-200);
+  padding: 1rem;
+  position: relative;
+  > button.clear-button {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    font-size: 1.75rem;
+    color: var(--danger-100);
+  }
+  > h4 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    width: 100%;
+  }
+  > div {
+    display: flex;
+    gap: 1.5rem;
+    > label {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-width: calc(50% - 0.75rem);
+      > span {
+        font-size: 0.75rem;
+      }
+      > input {
+        width: 100%;
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+      }
+    }
+  }
+  > input {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--bg-200);
+    font-size: 1.15rem;
+  }
+}

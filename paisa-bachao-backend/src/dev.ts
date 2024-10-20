@@ -1,10 +1,11 @@
-import prisma from './db'
 import {
   generateDummyAccountGroups,
   generateDummyAccounts,
-  generateDummyTransactions,
   generateDummyTags,
+  generateDummyTransactions,
 } from './db/dummyDataGenerator'
+
+import prisma from './db'
 
 const devFn = async () => {
   await prisma.transaction

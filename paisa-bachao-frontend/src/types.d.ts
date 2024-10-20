@@ -3,7 +3,7 @@ export interface Auth {
   token: string | undefined
   tokenParsed:
     | {
-        [key: string]: any
+        [key: string]: any // eslint-disable-line
       }
     | undefined
   loading: boolean
