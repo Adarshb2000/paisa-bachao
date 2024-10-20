@@ -1,4 +1,4 @@
-export interface FiterProps {
+export interface FilterProps {
   startDate?: Date
   endDate?: Date
   toAccountID?: string

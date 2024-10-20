@@ -2,7 +2,7 @@ import {
   CreateTransactionProps,
   EditTransactionProps,
   FilterAndSort,
-  FiterProps,
+  FilterProps,
 } from './types'
 import { PrismaClient, Transaction } from '@prisma/client'
 import {
@@ -152,7 +152,7 @@ export const getTransactions = async (
     amountRange,
     page = 1,
     pageSize = 10,
-  }: FiterProps,
+  }: FilterProps,
   prisma: PrismaClient
 ) => {
   const transactions = await prisma.transaction.findMany({

@@ -1,6 +1,6 @@
 import './index.scss'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import AddButton from '../../Components/AddButton'
 import ClickableCard from '../../Components/ClickableCard'
