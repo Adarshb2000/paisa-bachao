@@ -126,7 +126,6 @@ export const getRefinedTransactions = async (
   prisma: PrismaClient
 ) => {
   const { filter = {}, sort = {} } = params ?? { filter: {}, sort: {} }
-  console.log(filter, sort)
   const transactions = await prisma.transaction.findMany({
     where: {
       motherTransactionId: null,

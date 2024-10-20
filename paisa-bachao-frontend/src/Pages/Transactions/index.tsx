@@ -25,9 +25,8 @@ const Home = () => {
 
   const { data: transactions, isLoading } = useQuery<Transaction[]>({
     queryKey: ['transactions', filterAndSort],
-    queryFn: async () => {
-      console.log('fetching transactions with', filterAndSort)
-      return apiCall<{ data: Transaction[] }>({
+    queryFn: async () =>
+      apiCall<{ data: Transaction[] }>({
         url: '/transactions/search',
         method: 'POST',
         data: {
@@ -38,13 +37,8 @@ const Home = () => {
             ),
           },
         },
-      }).then(res => res?.data ?? [])
-    },
+      }).then(res => res?.data ?? []),
   })
-
-  useEffect(() => {
-    console.log(filterAndSort.filter)
-  }, [filterAndSort.filter])
 
   return (
     <div>
