@@ -1,6 +1,11 @@
 import './filter.scss'
 
-import { FilterType, RangeFilterType } from './types'
+import {
+  FilterItemType,
+  FilterType,
+  RangeFilterItemType,
+  RangeFilterType,
+} from './types'
 
 import RangeFilter from './Filters/RangeFilter'
 
@@ -8,8 +13,11 @@ const FilterPopup = ({
   filterState,
   filterItems,
 }: {
-  filterState: [FilterType, (f: FilterType) => void]
-  filterItems: (RangeFilterType | FilterType)[]
+  filterState: [
+    FilterType<RangeFilterType>,
+    (f: FilterType<RangeFilterType>) => void,
+  ]
+  filterItems: FilterItemType[]
 }) => {
   const [initialFilterState, updateFilterState] = filterState
 
@@ -28,7 +36,7 @@ const FilterPopup = ({
                     ...value,
                   })
                 }}
-                filterItem={item as RangeFilterType}
+                filterItem={item as RangeFilterItemType}
                 key={index}
               />
             )

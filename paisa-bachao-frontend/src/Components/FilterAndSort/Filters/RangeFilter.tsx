@@ -1,15 +1,20 @@
 import '../filter.scss'
 
-import { FilterType, RangeFilterType, RangeFilterValueTypes } from '../types'
+import {
+  FilterType,
+  RangeFilterItemType,
+  RangeFilterType,
+  RangeFilterValueTypes,
+} from '../types'
 
 import { useState } from 'react'
 import { formatCurrency } from '../../../helpers/helpers'
 // import { BiX } from 'react-icons/bi'
 
-interface RangeFilterProps<T> {
-  initialValues: { gte: T; lte: T }
-  updateFilters: (f: FilterType) => void
-  filterItem: RangeFilterType
+interface RangeFilterProps {
+  initialValues: RangeFilterType
+  updateFilters: (f: FilterType<RangeFilterType>) => void
+  filterItem: RangeFilterItemType
 }
 
 const getConvertedValue = (
@@ -28,11 +33,11 @@ const getConvertedValue = (
   }
 }
 
-const RangeFilter = <T extends keyof RangeFilterValueTypes>({
+const RangeFilter = ({
   initialValues,
   updateFilters,
   filterItem: { label, attribute, inputType },
-}: RangeFilterProps<T>) => {
+}: RangeFilterProps) => {
   const [filterValues, setFilterValues] = useState<{
     gte: RangeFilterValueTypes
     lte: RangeFilterValueTypes
