@@ -5,21 +5,29 @@ export type SortItemType = {
   descLabel?: string
 }
 
-export type GenericFilterType = {
+export type GenericFilterItemType = {
   label: string
   attribute: string
   filterType: 'range' | 'radio' | 'checkbox' | 'search'
+  inputType?: 'number' | 'date'
 }
 
-export interface RangeFilterType extends GenericFilterType {
+export interface RangeFilterItemType extends GenericFilterItemType {
   filterType: 'range'
   inputType: 'number' | 'date'
 }
 
+export interface RangeFilterType {
+  gte: RangeFilterValueTypes
+  lte: RangeFilterValueTypes
+}
+
 export type RangeFilterValueTypes = number | 'amount' | Date | null | undefined
 
-export type FilterType = {
-  [key: string]: any
+export type FilterItemType = RangeFilterItemType | GenericFilterItemType
+
+export interface FilterType<T> {
+  [attribute: string]: T
 }
 
 export type SortType = {

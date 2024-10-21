@@ -63,7 +63,7 @@ const Home = () => {
           {
             attribute: 'amount',
             filterType: 'range',
-            inputType: 'amount',
+            inputType: 'number',
             label: 'Amount',
           },
           {
