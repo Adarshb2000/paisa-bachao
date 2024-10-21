@@ -130,7 +130,7 @@ const Chips = ({
                     })
                   }
                 >
-                  {attribute}
+                  {label}
                 </Chip>
               )
           }
