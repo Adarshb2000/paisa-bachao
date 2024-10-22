@@ -21,7 +21,7 @@ export const generateDummyAccounts = async (count: number = 10) => {
 }
 
 export const generateDummyBudgets = async () => {
-  const tags = await prisma.tag.findMany()
+  const categories = await prisma.category.findMany()
   const frequencyList = [
     'DAILY',
     'WEEKLY',
@@ -31,7 +31,7 @@ export const generateDummyBudgets = async () => {
     'BIWEEKLY',
   ] as const
   const budgets = []
-  for (const tag of tags) {
+  for (const category of categories) {
     const budgetCount = randomNumber(3)
     for (let i = 0; i < budgetCount; i++) {
       try {
@@ -39,8 +39,8 @@ export const generateDummyBudgets = async () => {
           data: {
             amount: randomNumber(1000),
             frequency: frequencyList[randomNumber(frequencyList.length - 1)],
-            tagId: tag.id,
-            userID: tag.userID,
+            tagId: category.id,
+            userID: category.userID,
           },
         })
       } catch {}
@@ -70,6 +70,32 @@ export const generateDummyTags = () => {
     data: tags.map(name => ({
       name,
       color: faker.color.rgb(),
+      userID: '123456',
+    })),
+  })
+}
+
+export const generateDummyCategories = () => {
+  const categories = [
+    'Food',
+    'Groceries',
+    'Vacation',
+    'Transportation',
+    'Bills',
+    'Body care',
+    'Shopping',
+    'Rent',
+    'Utilities',
+    'Health',
+    'Entertainment',
+    'Education',
+    'Miscellaneous',
+    'Salary',
+    'Refund',
+  ]
+  return prisma.category.createMany({
+    data: categories.map(name => ({
+      name,
       userID: '123456',
     })),
   })

@@ -25,7 +25,9 @@ export const createTransaction = async (
   const createdTransaction = await prisma.$transaction(async prisma => {
     const createdTransaction = await prisma.transaction.create({
       data: {
-        fromAccountID: transaction.fromAccountID,
+        fromAccountID: transaction.fromAccountID
+          ? transaction.fromAccountID
+          : undefined,
         fromName: transaction.fromName,
 
         toAccountID: transaction.toAccountID,
@@ -39,6 +41,11 @@ export const createTransaction = async (
         tags: {
           connect: transaction.tags?.map(tag => ({ id: tag })),
         },
+        category: transaction.category
+          ? {
+              connect: { id: transaction.category },
+            }
+          : undefined,
 
         transactionFragments: transaction.transactionFragments
           ? {
@@ -87,6 +94,9 @@ export const createTransaction = async (
                 equateTransactions(transactionFragment, fragment)
               )
               ?.tags?.map(tag => ({ id: tag })),
+          },
+          category: {
+            connect: { id: transaction.category },
           },
         },
       })

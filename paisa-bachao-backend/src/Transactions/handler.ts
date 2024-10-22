@@ -14,6 +14,7 @@ export const GetTransactions: Handler = async (req, res) => {
     fromAccountID,
     account,
     tags,
+    category,
     amount,
     amountRange,
     page = 1,
@@ -25,6 +26,7 @@ export const GetTransactions: Handler = async (req, res) => {
     fromAccountID?: string
     account?: string
     tags?: string[]
+    category?: string
     amount?: number
     amountRange?: [number, number]
     page?: number
@@ -39,6 +41,7 @@ export const GetTransactions: Handler = async (req, res) => {
       fromAccountID,
       account,
       tags,
+      category,
       amount,
       amountRange,
       page,
@@ -96,6 +99,7 @@ export const CreateTransaction: Handler = async (req, res) => {
     temporalStamp,
     transactionFragments,
     tags,
+    category,
   }: createTransactionsBody = req.body
 
   if (
@@ -131,6 +135,7 @@ export const CreateTransaction: Handler = async (req, res) => {
         place,
         temporalStamp: temporalStamp ? new Date(temporalStamp) : undefined,
         tags: tags || [],
+        category: category || undefined,
         transactionFragments: transactionFragments
           ? {
               data: transactionFragments.data.map(fragment => ({
@@ -145,6 +150,7 @@ export const CreateTransaction: Handler = async (req, res) => {
                   ? new Date(fragment.temporalStamp)
                   : undefined,
                 tags: fragment.tags || [],
+                category: fragment.category || undefined,
               })),
             }
           : undefined,
@@ -169,6 +175,7 @@ export const EditTransaction: Handler = async (req, res) => {
     place = '',
     temporalStamp = new Date(),
     tags = [],
+    category = '',
   }: createTransactionsBody = req.body
 
   if (!fromName || !toName) {

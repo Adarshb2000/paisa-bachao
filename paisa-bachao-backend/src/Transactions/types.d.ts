@@ -5,6 +5,7 @@ export interface FilterProps {
   fromAccountID?: string
   account?: string
   tags?: string[]
+  category?: string
   amount?: number
   amountRange?: [number, number]
   page?: number
@@ -25,6 +26,7 @@ export interface CreateTransactionProps {
     data: CreateTransactionProps[]
   }
   tags?: string[]
+  category?: string
 }
 
 export interface EditTransactionProps {
@@ -37,6 +39,7 @@ export interface EditTransactionProps {
   place: string
   temporalStamp: Date
   tags: string[]
+  category?: string
 }
 
 export interface BalanceUpdate {
@@ -57,6 +60,7 @@ export interface createTransactionsBody {
     data: createTransactionsBody[]
   }
   tags?: string[]
+  category?: string
 }
 
 export type FilterType = {
