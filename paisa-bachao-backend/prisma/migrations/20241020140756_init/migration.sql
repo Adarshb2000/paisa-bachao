@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Budget" ALTER COLUMN "amount" DROP DEFAULT,
+ALTER COLUMN "frequency" DROP DEFAULT;

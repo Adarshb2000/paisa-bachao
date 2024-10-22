@@ -40,6 +40,31 @@ model Transaction {
   userID String?
 }
 
+enum Frequency {
+  DAILY
+  WEEKLY
+  BIWEEKLY
+  MONTHLY
+  HALFYEARLY
+  YEARLY
+}
+
+model Budget {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  amount    Decimal
+  frequency Frequency
+
+  tagId String
+  tag   Tag    @relation(fields: [tagId], references: [id])
+
+  userID String?
+
+  @@unique([userID, tagId, frequency])
+}
+
 // Tag are the tags for transactions
 // Transactions can have many tags
 model Tag {
@@ -58,6 +83,7 @@ model Tag {
 
   tagGraphPrimary TagGraph[] @relation("primary")
   tagGraphRelated TagGraph[] @relation("related")
+  budgets         Budget[]
 
   @@index([name, userID])
 }

@@ -1,6 +1,7 @@
 import {
   generateDummyAccountGroups,
   generateDummyAccounts,
+  generateDummyBudgets,
   generateDummyTags,
   generateDummyTransactions,
 } from './db/dummyDataGenerator'
@@ -14,6 +15,7 @@ const devFn = async () => {
     .then(() => prisma.accountGroup.deleteMany())
     .then(() => prisma.transaction.deleteMany())
     .then(() => generateDummyTags())
+    .then(() => generateDummyBudgets())
     .then(() => generateDummyAccounts())
     .then(() => generateDummyAccountGroups())
     .then(() => generateDummyTransactions())
